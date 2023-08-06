@@ -10,14 +10,11 @@
     "type": "git",
     "url": "git+https://github.com/wfhopkins/mastr-tactics.git"
   },
-<<<<<<< Updated upstream
-=======
 
   "dependencies": {
     "readline-sync": "^1.4.10"
   },
   
->>>>>>> Stashed changes
   "keywords": [
     "websocket",
     "js",
