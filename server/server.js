@@ -13,7 +13,7 @@ app.use(session); // Use the session middleware to enable cookie-based sessions
 
 // Handle login: save user to session
 app.post("/api/login", (req, res) => {
-  const name = req.body.email; // Get the email from the request body
+  const name = req.body.username; // Get the username from the request body
   const user = { id: 1, name }; // Create a user object with an ID and name
   req.session.user = user; // Store the user object in the session
   res.json(user); // Respond with the user object as JSON
