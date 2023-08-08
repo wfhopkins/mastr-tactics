@@ -20,10 +20,10 @@ app.post("/api/login", (req, res) => {
 });
 
 // Handle favicon request to avoid 404 errors
-app.get("/favicon.ico", (req, res) => {
-  console.log("ico");
-  res.status(204).send(""); // Respond with empty content to favicon requests
-});
+// app.get("/favicon.ico", (req, res) => {
+//   console.log("ico");
+//   res.status(204).send(""); // Respond with empty content to favicon requests
+// });
 
 // Handle logout: remove user object from session
 app.post("/api/logout", (req, res) => {
