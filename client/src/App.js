@@ -11,9 +11,9 @@ export default function App() {
   const [auth, setAuth] = useState(null);
 
   // Function to log in the user on the server
-  const login = function(email, password) {
+  const login = function(username, password) {
     console.log("TESTING")
-    axios.post("api/login", {email, password})
+    axios.post("api/login", {username, password})
       .then(res => {
         console.log(res.data);
         setAuth(res.data);
