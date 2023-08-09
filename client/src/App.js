@@ -3,7 +3,7 @@ import {useState} from 'react';
 import axios from 'axios';
 import Login from './pages/Login';
 import Welcome from './pages/Welcome';
-import './App.css';
+import './styles/App.css';
 
 // Define the main App component
 export default function App() {
@@ -35,7 +35,7 @@ export default function App() {
   // Return the JSX for the main App component
   return (
     <div className="App">
-      <h1>MASTR-TACTICS</h1>
+      {/* <h1>MASTR-TACTICS</h1> */}
       
       {/* Show chat and user info if authenticated */}
       {auth &&

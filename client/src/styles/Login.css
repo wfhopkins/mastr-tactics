@@ -1,0 +1,19 @@
+
+/* Login.css */
+.login-container {
+  position: relative;
+  background-image: url('../images/login-page-image.png'); /* Adjust the path as needed */
+  background-size: cover;
+  background-position: center;
+  min-height: 100vh;
+}
+
+.login-form {
+  position: absolute;
+  top: 65%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  padding: 20px;
+  background-color: rgba(255, 255, 255, 0);
+  border-radius: 10px;
+}
