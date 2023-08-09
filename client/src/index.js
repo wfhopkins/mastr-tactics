@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './App';
 import Phaser from 'phaser';
-
+// import { Player, Deck, Hand, Card, Collection } from 'cardgame-class'
 
 // const config = {
 //   type: Phaser.AUTO,

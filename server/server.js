@@ -1,5 +1,6 @@
 const { Server } = require('socket.io');
 const express = require('express');
+// import { Player, Deck, Hand, Card, Collection } from 'cardgame-class'
 
 // Enable Cookie Sessions
 const cookieSession = require('cookie-session');    // Import middleware for client cookie sessions
