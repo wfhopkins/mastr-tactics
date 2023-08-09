@@ -119,5 +119,7 @@ class Hand extends Collection {
 module.exports = {
   Player,
   Deck,
+  Hand,
   Card,
+  Collection
 }
