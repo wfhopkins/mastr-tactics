@@ -1,11 +1,10 @@
-// Import necessary dependencies
 import {useState} from 'react';
 import axios from 'axios';
 import Login from './pages/Login';
 import Welcome from './pages/Welcome';
 import './styles/App.css';
 
-// Define the main App component
+
 export default function App() {
   //State to manage authentication status
   const [auth, setAuth] = useState(null);
@@ -32,21 +31,19 @@ export default function App() {
       });
   };
 
-  // Return the JSX for the main App component
+  
   return (
     <div className="App">
       {/* <h1>MASTR-TACTICS</h1> */}
       
-      {/* Show chat and user info if authenticated */}
+      {/* Gateway to the welcome page */}
       {auth &&
         <>
-          <span>Logged in as:</span><span className="name"> {auth.name}</span>
-          <button className="logout" type="button" onClick={logout}>Logout</button>
-          <Welcome />
+          <Welcome auth={auth} logout={logout} /> 
         </>
       }
 
-       {/* Show login form if not authenticated */}
+       {/* entrance login screen */}
       {!auth &&
         <Login login={login} />
       }
