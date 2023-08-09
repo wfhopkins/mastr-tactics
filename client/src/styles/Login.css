@@ -1,8 +1,6 @@
-
-/* Login.css */
 .login-container {
   position: relative;
-  background-image: url('../images/login-page-image.png'); /* Adjust the path as needed */
+  background-image: url('../images/login-page-image.png');
   background-size: cover;
   background-position: center;
   min-height: 100vh;
@@ -16,4 +14,31 @@
   padding: 20px;
   background-color: rgba(255, 255, 255, 0);
   border-radius: 10px;
+
+}
+
+/* This is for the actual text inputs */
+.login-form input[type="text"],
+.login-form input[type="password"] {
+  background-color: rgba(255, 255, 255, 0.6); 
+  border: none; 
+  padding: 8px; 
+  border-radius: 5px; 
+}
+
+/* This will apply styles to the submit button */
+.login-form button[type="submit"] {
+  border: 2px solid rgba(45, 73, 92, 1); 
+  background-color: rgba(255, 255, 255, 0.6); 
+  color: black; 
+  padding: 8px 8px; 
+  font-size: 14px; 
+  border-radius: 5px; 
+  
+}
+
+/* This is for submit button on hover */
+.login-form button[type="submit"]:hover {
+  /* border: 2px solid rgba(193, 162, 114, 1); This is the gold rgb from the login-image*/
+  cursor: pointer;
 }
