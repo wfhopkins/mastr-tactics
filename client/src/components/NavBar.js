@@ -1,11 +1,11 @@
 import React from 'react';
 
-const NavBar = ({ auth, logout }) => {
+const NavBar = ({ auth, logout, onLoreButtonClick, onAboutButtonClick, onRulesButtonClick }) => {
   return (
     <nav className="nav-bar">
-      <button className="nav-button">Home</button>
-      <button className="nav-button">About</button>
-      <button className="nav-button">Rules</button>
+      <button className="nav-button" onClick={onRulesButtonClick}>Rules</button>
+      <button className="nav-button" onClick={onAboutButtonClick}>About</button>
+      <button className="nav-button" onClick={onLoreButtonClick}>Lore</button> {/* Add Lore button and onClick event */}
       
       {/* Display user information and logout button */}
       {auth && (
@@ -20,3 +20,10 @@ const NavBar = ({ auth, logout }) => {
 };
 
 export default NavBar;
+
+
+
+
+
+
+

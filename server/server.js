@@ -20,11 +20,6 @@ app.post("/api/login", (req, res) => {
   res.json(user); // Respond with the user object as JSON
 });
 
-// Handle favicon request to avoid 404 errors
-// app.get("/favicon.ico", (req, res) => {
-//   console.log("ico");
-//   res.status(204).send(""); // Respond with empty content to favicon requests
-// });
 
 // Handle logout: remove user object from session
 app.post("/api/logout", (req, res) => {
