@@ -3,6 +3,7 @@ import axios from 'axios';
 import Login from './pages/Login';
 import Welcome from './pages/Welcome';
 import './styles/App.css';
+import Lore from './components/Lore';
 
 
 export default function App() {
@@ -46,6 +47,7 @@ export default function App() {
        {/* entrance login screen */}
       {!auth &&
         <Login login={login} />
+      
       }
 
     </div >
