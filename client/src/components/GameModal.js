@@ -1,5 +1,5 @@
 import React from 'react';
-import './GameModal.css';
+import '../styles/GameModal.css';
 
 /* Define a functional component called GameModal that takes three props
 isOpen: if false returns null to render nothing if true renders the modal overlay
