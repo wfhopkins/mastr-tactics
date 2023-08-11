@@ -27,7 +27,4 @@ const cardImages = {
   templar5 : require('../../images/templar5.png')
 }
 
-const backOfCard = { cardBack : require('../../images/MASTR-cardback.png') }
-
-
-export default cardImages; backOfCard;
+export default cardImages;

@@ -15,7 +15,7 @@ const PhaserGame = () => {
       //console.log("Loading..", cardImages);
     // console.log("back of card: ", backOfCard);
 
-    this.load.image('background', woodenBackdrop)
+    // this.load.image('background', woodenBackdrop)
       
       for (let cardImage in cardImages) {
         this.load.image(cardImage, cardImages[cardImage])
@@ -28,15 +28,17 @@ const PhaserGame = () => {
 
       fpsMeter = game.add.text(20, 20, 'FPS: ' + fpsMeter, { font: '' });
       
-      // for (let cardImage in cardImages) {
-      //   const cardPhys = game.physics.add.image(Math.random() * 400, Math.random() * 300, cardImage);
-      //   cardPhys.setScale(0.2)
-      //   cardPhys.setVelocity(Math.random() * 200, Math.random() * 200);
-      //   cardPhys.setBounce(1, 1);
-      //   cardPhys.setCollideWorldBounds(true);
-      // }
-
       game.add.image(100, 100, MASTRcardback);
+
+      for (let cardImage in cardImages) {
+        const cardPhys = game.physics.add.image(Math.random() * 400, Math.random() * 300, cardImage);
+        cardPhys.setScale(0.2)
+        cardPhys.setVelocity(Math.random() * 200, Math.random() * 200);
+        cardPhys.setBounce(1, 1);
+        cardPhys.setCollideWorldBounds(true);
+      }
+
+      
     };
     
     function update() { 
@@ -67,10 +69,10 @@ const PhaserGame = () => {
       },
       callbacks: {
         postBoot: (game) => {
-          game.canvas.style.backgroundImage = woodenBackdrop;
+          game.canvas.style.backgroundImage = `url(${woodenBackdrop})`;
           game.canvas.style.backgroundSize = 'cover';
-        },
-      },
+        }
+      }
     });
 
   }, []); // Run this effect only once after initial render
