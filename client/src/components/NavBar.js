@@ -3,6 +3,7 @@ import React from 'react';
 const NavBar = ({ auth, logout, onLoreButtonClick, onAboutButtonClick, onRulesButtonClick, onCardsButtonClick }) => {
   return (
     <nav className="nav-bar">
+      {/* <button className="nav-button" onClick={} */}
       <button className="nav-button" onClick={onRulesButtonClick}>Rules</button>
       <button className="nav-button" onClick={onAboutButtonClick}>About</button>
       <button className="nav-button" onClick={onLoreButtonClick}>Lore</button> 

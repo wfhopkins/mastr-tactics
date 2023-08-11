@@ -16,7 +16,7 @@ const GameModal = ({ isOpen, onClose, children }) => {
   return (
     <div className="modal-overlay">
       <div className="modal">
-        <button className="modal-close" onClick={onClose}>
+        <button className="modal-close" onClick={onClose} style={{backgroundColor: "white"}}>
           Close
         </button>
         {children}

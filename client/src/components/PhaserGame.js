@@ -12,6 +12,10 @@ const PhaserGame = () => {
     // any preloaded assets should be here.
     function preload() {
       //console.log("Loading..", cardImages);
+    // console.log("back of card: ", backOfCard);
+
+    // this.load.image('background', woodenBackdrop)
+      
       for (let cardImage in cardImages) {
         this.load.image(cardImage, cardImages[cardImage])
       }
@@ -35,7 +39,6 @@ const PhaserGame = () => {
       cardBack.setScale(0.2);
     };
     
-    
     function update() { 
       const loopStatus = this.sys.game.loop;
       fpsMeter.setText("FPS :" + loopStatus.actualFps);     
@@ -48,6 +51,7 @@ const PhaserGame = () => {
       parent: gameContainerRef.current, // Attach the game canvas to the container element
       width: 600, // Set the canvas width
       height: 450, // Set the canvas height
+      backgroundColor: '#000',
       physics: {
         default: 'arcade', 
         arcade: {
@@ -60,6 +64,12 @@ const PhaserGame = () => {
         preload: preload,
         create: create,
         update: update,
+      },
+      callbacks: {
+        postBoot: (game) => {
+          game.canvas.style.backgroundImage = `url(${woodenBackdrop})`;
+          game.canvas.style.backgroundSize = 'cover';
+        }
       }
     });
 
