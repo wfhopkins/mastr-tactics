@@ -1,11 +1,8 @@
 import React, { useRef, useEffect } from 'react';
 import Phaser from 'phaser';
-// import backOfCard from './imports/assets.js';
-import cardAssets  from './imports/assets.js';
-
-const cardImages = cardAssets.cardImages;
-const backOfCard = cardAssets.backOfCard;
-
+import cardImages  from './imports/assets.js';
+import woodenBackdrop from '../images/wooden-backdrop.png'
+import MASTRcardback from '../images/MASTR-cardback.png'
 
 const PhaserGame = () => {
   // Create a reference to the game container element
@@ -16,9 +13,9 @@ const PhaserGame = () => {
     // any preloaded assest should be here.
     function preload() {
       //console.log("Loading..", cardImages);
-    console.log("back of card: ", backOfCard);
+    // console.log("back of card: ", backOfCard);
 
-      this.load.image(backOfCard, backOfCard["cardBack"])
+    this.load.image('background', woodenBackdrop)
       
       for (let cardImage in cardImages) {
         this.load.image(cardImage, cardImages[cardImage])
@@ -39,7 +36,7 @@ const PhaserGame = () => {
       //   cardPhys.setCollideWorldBounds(true);
       // }
 
-      game.add.image(100, 100, "../../images/MASTR-cardback.png");
+      game.add.image(100, 100, MASTRcardback);
     };
     
     function update() { 
@@ -54,7 +51,7 @@ const PhaserGame = () => {
       parent: gameContainerRef.current, // Attach the game canvas to the container element
       width: 600, // Set the canvas width
       height: 450, // Set the canvas height
-      background: '../../images/wooden-backdrop.png',
+      backgroundColor: '#000',
       physics: {
         default: 'arcade', 
         arcade: {
@@ -67,7 +64,13 @@ const PhaserGame = () => {
         preload: preload,
         create: create,
         update: update,
-      }
+      },
+      callbacks: {
+        postBoot: (game) => {
+          game.canvas.style.backgroundImage = woodenBackdrop;
+          game.canvas.style.backgroundSize = 'cover';
+        },
+      },
     });
 
   }, []); // Run this effect only once after initial render

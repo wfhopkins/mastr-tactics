@@ -29,6 +29,5 @@ const cardImages = {
 
 const backOfCard = { cardBack : require('../../images/MASTR-cardback.png') }
 
-const cardAssets = { cardImages, backOfCard };
 
-export default cardAssets;
+export default cardImages; backOfCard;
