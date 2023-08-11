@@ -9,6 +9,7 @@ import About from '../components/About';
 import Rules from '../components/Rules';
 import Cards from '../components/Cards';
 
+
 const Welcome = ({ auth, logout }) => {
   //These are the state variables for managing component visibility
   const [modalOpen, setModalOpen] = useState(false);
@@ -48,7 +49,7 @@ const Welcome = ({ auth, logout }) => {
   };
   
   const handleCardsButtonClick = () => {
-    setIsCardsVisible(!isRulesVisible);
+    setIsCardsVisible(!isCardsVisible);
     setIsRulesVisible(false);
     setIsLoreVisible(false);
     setIsAboutVisible(false); 
