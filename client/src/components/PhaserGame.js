@@ -1,6 +1,10 @@
 import React, { useRef, useEffect } from 'react';
 import Phaser from 'phaser';
 import { cardImages, otherImages  } from '../assets.js'
+import letterhead from '../images/letterhead.png'
+import Card from '../helpers/card.js';
+import Dealer from '../helpers/dealer.js';
+import Zone from '../helpers/zone.js';
 
 const PhaserGame = () => {
   // Create a reference to the game container element
@@ -12,6 +16,7 @@ const PhaserGame = () => {
     function preload() {
       //console.log("Loading..", cardImages);
     // console.log("back of card: ", backOfCard);
+    this.load.image('letterhead', letterhead)
 
     this.load.image('backdrop', otherImages.backdrop);
       
@@ -26,11 +31,38 @@ const PhaserGame = () => {
     function create() {
       const game = this;
       
-      const backdrop = game.add.image(10,10, "backdrop");
+      const backdrop = game.add.image(10, 10, "backdrop");
       backdrop.setScale(1);
 
       fpsMeter = game.add.text(20, 20, 'FPS: ' + fpsMeter, { font: '' });
       
+      this.add.image(315, 220, 'letterhead').setScale(0.25);
+
+      this.add.rectangle(550, 155, 70, 100, '0xf5f5f5');
+      this.add.text(515, 150, 'DISCARD', {color: '0xfffff'});
+      this.add.sprite(550, 290, 'cardBack').setScale(0.125);
+
+
+      this.zone = new Zone(this);
+      this.dropZone = this.zone.renderZone();
+      this.outline = this.zone.renderOutline(this.dropZone);
+
+
+      const playerHand = this.add.group();
+      for (let i = 0; i < 5; i++) {
+        const sprite = this.add.sprite(190 + (i * 60), 400, 'archer1').setScale(0.12);
+        playerHand.add(sprite);
+      }
+
+      const opponentHand = this.add.group();
+      for ( let i = 0; i < 5; i++) {
+        const sprite = this.add.sprite(190 + (i * 60), 40, 'cardBack').setScale(0.09);
+        opponentHand.add(sprite);
+      }
+
+    }
+
+
       // for (let cardImage in cardImages) {
       //   const cardPhys = game.physics.add.image(Math.random() * 400, Math.random() * 300, cardImage);
       //   cardPhys.setScale(0.2)
@@ -38,9 +70,9 @@ const PhaserGame = () => {
       //   cardPhys.setBounce(1, 1);
       //   cardPhys.setCollideWorldBounds(true);
       // }
-      const cardBack = game.add.image(200,200, "cardBack");
-      cardBack.setScale(0.2);
-    };
+      // const cardBack = game.add.image(200,200, "cardBack");
+      // cardBack.setScale(0.2);
+    // };
     
     function update() { 
       const loopStatus = this.sys.game.loop;
