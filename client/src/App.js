@@ -15,7 +15,7 @@ export default function App() {
     console.log("TESTING")
     axios.post("api/login", {username, password})
       .then(res => {
-        console.log(res.data);
+        console.log("Res.data", res.data);
         setAuth(res.data);
       })
       .catch(err => {

@@ -1,19 +1,19 @@
 import React, { useState, useEffect, useRef } from 'react';
 import '../styles/Parchment.css';
 import letterheadImage from '../images/letterhead.png';
-import rulesImage from '../images/rules-image.png';
-import rulesImage2 from '../images/rules-image2.png';
-import rulesImage3 from '../images/rules-image3.png';
+import { cardImages, otherImages  } from '../assets.js'
+
 
 const Rules = ({ onClose }) => {
   const [isVisible, setIsVisible] = useState(false);
   const containRef = useRef();
   const parchmentRef = useRef();
 
+  
   useEffect(() => {
     
     setIsVisible(true); // Trigger the animation when component mounts
-
+    
     //Function to adjust the height of the parchment based on the xontent
     const adjustParchmentHeight = () => {
       const content = containRef.current;
@@ -71,10 +71,10 @@ const Rules = ({ onClose }) => {
           The game begins with 2 players and a shared deck of 25 cards.
           Both players draw a hand of 5 cards from the deck.
           Players place 3 cards from their hand onto the board face down in columns like so:
-          <p id="rulesImage"><img src={rulesImage3} alt="rules3" /></p>
+          <p id="rulesImage"><img src={otherImages.rulesImage3} alt="rules3" /></p>
           Once both players have placed 3 cards on the board, the cards are revealed one at a time and
           they battle!
-          <p id="rulesImage"><img src={rulesImage2} alt="rules2" /></p>
+          <p id="rulesImage"><img src={otherImages.rulesImage2} alt="rules2" /></p>
           Use the MASTR wheel to see who wins the battle! If the Factions being compared are the
           same, the one with the higher Rank wins.
           For each battle, the winner scores 1 point. A total of 3 points can be won during this part of the
@@ -92,7 +92,7 @@ const Rules = ({ onClose }) => {
           during the team battle, the game ends immediately. However, if a player breaks 25 during the
           1on 1 battles, the full turn will continue until the team skirmish has finished and total scores will
           be compared.
-          <p id="rulesImage"><img src={rulesImage} alt="rules" /></p>
+          <p id="rulesImage"><img src={otherImages.rulesImage} alt="rules" /></p>
           
           If two players hit 25 in the same turn, it is a DRAW!
           It is simple to learn, fun to play, and challenging to MASTR!

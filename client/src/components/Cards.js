@@ -46,11 +46,22 @@
 import React, { useState, useEffect, useRef } from 'react';
 import '../styles/Parchment.css'; // Make sure to import your CSS file
 import letterheadImage from '../images/letterhead.png';
-import archer from '../images/archer-one.png';
-import rogue from '../images/rogue-one.png';
-import sorcerer from '../images/sorcerer-one.png';
-import mage from '../images/mage-five.png';
-import templar from '../images/templar-one.png';
+
+// Old image references...
+// import archer from '../images/archer-one.png';
+// import rogue from '../images/rogue-one.png';
+// import sorcerer from '../images/sorcerer-one.png';
+// import mage from '../images/mage-five.png';
+// import templar from '../images/templar-one.png';
+
+// New image references...
+import { cardImages, otherImages  } from '../assets.js'
+const archer = cardImages.archer1;
+const rogue = cardImages.rogue1;
+const sorcerer = cardImages.sorcerer1;
+const mage = cardImages.mage5;
+const templar = cardImages.templar1;
+
 
 const Cards = ({ onClose }) => {
   const [isVisible, setIsVisible] = useState(false);
