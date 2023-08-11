@@ -68,11 +68,11 @@ const Welcome = ({ auth, logout }) => {
       <NavBar auth={auth} logout={logout} onCardsButtonClick={handleCardsButtonClick} onLoreButtonClick={handleLoreButtonClick} onAboutButtonClick={handleAboutButtonClick} onRulesButtonClick={handleRulesButtonClick} />
       {/* <h4>This is the welcome page</h4>
       <p>Check out the rules page!</p>
-      <Chat />
+      <Chat /> */}
       <button onClick={handleModalOpen}>Play Now</button>
       <GameModal isOpen={modalOpen} onClose={handleModalClose}>
         <PhaserGame />
-      </GameModal> */}
+      </GameModal> 
 
       <div className={`rules-container ${isLoad ? 'pre-load' : ''} ${isRulesVisible ? 'slide-down' : 'fade-out'}`}>
         <Rules onClose={handleComponentClose} />
