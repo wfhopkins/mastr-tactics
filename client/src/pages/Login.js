@@ -1,25 +1,27 @@
 import React, { useState } from 'react';
-import LoginImage from '../images/login-page-image.png';
+import { cardImages, otherImages  } from '../assets.js'
 import '../styles/Login.css';
+
 
 // Define the Login component
 export default function Login(props) {
   // State to manage email and password inputs
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-
+  const loginImage = otherImages.loginImage;
+  
   // Handle form submission
   const onSubmit = function(event) {
     event.preventDefault();
     // Call the login function from props if email is provided
     username && props.login(username, password);
   };
-
+  
   // Render the Login component
   return (
     <div className="login">
       <div className="login-container">
-        <div className="background-image" style={{ backgroundImage: `url(${LoginImage})` }}>
+        <div className="background-image" style={{ backgroundImage: `url(${loginImage})` }}>
           {/* Login form */}
           <form className="login-form" onSubmit={onSubmit}>
             {/* Username input */}

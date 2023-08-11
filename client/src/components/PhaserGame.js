@@ -1,8 +1,7 @@
 import React, { useRef, useEffect } from 'react';
 import Phaser from 'phaser';
-import cardImages  from './imports/assets.js';
-import woodenBackdrop from '../images/wooden-backdrop.png'
-import MASTRcardback from '../images/MASTR-cardback.png'
+import { cardImages, otherImages  } from '../assets.js'
+
 
 const PhaserGame = () => {
   // Create a reference to the game container element
@@ -10,7 +9,7 @@ const PhaserGame = () => {
   // all game runtime code inside useEffect..
   useEffect(() => {
     let fpsMeter = 0;
-    // any preloaded assest should be here.
+    // any preloaded assets should be here.
     function preload() {
       //console.log("Loading..", cardImages);
     // console.log("back of card: ", backOfCard);
@@ -19,8 +18,9 @@ const PhaserGame = () => {
       
       for (let cardImage in cardImages) {
         this.load.image(cardImage, cardImages[cardImage])
-
       }
+      this.load.image("cardBack", otherImages.cardBack)
+
     };
     // main game loop
     function create() {
@@ -28,17 +28,15 @@ const PhaserGame = () => {
 
       fpsMeter = game.add.text(20, 20, 'FPS: ' + fpsMeter, { font: '' });
       
-      game.add.image(100, 100, MASTRcardback);
-
-      for (let cardImage in cardImages) {
-        const cardPhys = game.physics.add.image(Math.random() * 400, Math.random() * 300, cardImage);
-        cardPhys.setScale(0.2)
-        cardPhys.setVelocity(Math.random() * 200, Math.random() * 200);
-        cardPhys.setBounce(1, 1);
-        cardPhys.setCollideWorldBounds(true);
-      }
-
-      
+      // for (let cardImage in cardImages) {
+      //   const cardPhys = game.physics.add.image(Math.random() * 400, Math.random() * 300, cardImage);
+      //   cardPhys.setScale(0.2)
+      //   cardPhys.setVelocity(Math.random() * 200, Math.random() * 200);
+      //   cardPhys.setBounce(1, 1);
+      //   cardPhys.setCollideWorldBounds(true);
+      // }
+      const cardBack = game.add.image(Math.random() * 400, Math.random() * 300, "cardBack");
+      cardBack.setScale(0.2);
     };
     
     function update() { 
