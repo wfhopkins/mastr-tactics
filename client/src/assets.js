@@ -33,7 +33,7 @@ const otherImages = {
   rulesImage : require('./images/rules-image.png'),
   rulesImage2 : require('./images/rules-image2.png'),
   rulesImage3 : require('./images/rules-image3.png'),
-
+  backdrop : require('./images/wooden-backdrop.png'),
 };
 
 export { cardImages, otherImages };

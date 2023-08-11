@@ -2,7 +2,6 @@ import React, { useRef, useEffect } from 'react';
 import Phaser from 'phaser';
 import { cardImages, otherImages  } from '../assets.js'
 
-
 const PhaserGame = () => {
   // Create a reference to the game container element
   const gameContainerRef = useRef(null);
@@ -14,17 +13,21 @@ const PhaserGame = () => {
       //console.log("Loading..", cardImages);
     // console.log("back of card: ", backOfCard);
 
-    // this.load.image('background', woodenBackdrop)
+    this.load.image('backdrop', otherImages.backdrop);
       
       for (let cardImage in cardImages) {
         this.load.image(cardImage, cardImages[cardImage])
       }
       this.load.image("cardBack", otherImages.cardBack)
 
+
     };
     // main game loop
     function create() {
       const game = this;
+      
+      const backdrop = game.add.image(10,10, "backdrop");
+      backdrop.setScale(1);
 
       fpsMeter = game.add.text(20, 20, 'FPS: ' + fpsMeter, { font: '' });
       
@@ -35,7 +38,7 @@ const PhaserGame = () => {
       //   cardPhys.setBounce(1, 1);
       //   cardPhys.setCollideWorldBounds(true);
       // }
-      const cardBack = game.add.image(Math.random() * 400, Math.random() * 300, "cardBack");
+      const cardBack = game.add.image(200,200, "cardBack");
       cardBack.setScale(0.2);
     };
     
@@ -65,12 +68,12 @@ const PhaserGame = () => {
         create: create,
         update: update,
       },
-      callbacks: {
-        postBoot: (game) => {
-          game.canvas.style.backgroundImage = `url(${woodenBackdrop})`;
-          game.canvas.style.backgroundSize = 'cover';
-        }
-      }
+      // callbacks: {
+      //   postBoot: (game) => {
+      //     game.canvas.style.backgroundImage = 'backdrop')`;
+      //     game.canvas.style.backgroundSize = 'cover';
+      //   }
+      // }
     });
 
   }, []); // Run this effect only once after initial render
