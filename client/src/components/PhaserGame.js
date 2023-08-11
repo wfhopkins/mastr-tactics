@@ -37,16 +37,14 @@ const PhaserGame = () => {
       fpsMeter = game.add.text(20, 20, 'FPS: ' + fpsMeter, { font: '' });
       
       this.add.image(315, 220, 'letterhead').setScale(0.25);
-
-      this.add.rectangle(550, 155, 70, 100, '0xf5f5f5');
-      this.add.text(515, 150, 'DISCARD', {color: '0xfffff'});
-      this.add.sprite(550, 290, 'cardBack').setScale(0.125);
-
-
+      
       this.zone = new Zone(this);
       this.dropZone = this.zone.renderZone();
       this.outline = this.zone.renderOutline(this.dropZone);
-
+      
+      this.add.rectangle(550, 155, 70, 100, '0xf5f5f5');
+      this.add.text(515, 150, 'DISCARD', {color: '0xfffff'});
+      this.add.sprite(550, 290, 'cardBack').setScale(0.125);
 
       const playerHand = this.add.group();
       for (let i = 0; i < 5; i++) {
@@ -56,7 +54,7 @@ const PhaserGame = () => {
 
       const opponentHand = this.add.group();
       for ( let i = 0; i < 5; i++) {
-        const sprite = this.add.sprite(190 + (i * 60), 40, 'cardBack').setScale(0.09);
+        const sprite = this.add.sprite(190 + (i * 60), 45, 'cardBack').setScale(0.09);
         opponentHand.add(sprite);
       }
 
