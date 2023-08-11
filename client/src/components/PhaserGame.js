@@ -1,6 +1,10 @@
 import React, { useRef, useEffect } from 'react';
 import Phaser from 'phaser';
-import cardImages from './imports/assets.js'
+// import backOfCard from './imports/assets.js';
+import cardAssets  from './imports/assets.js';
+
+const cardImages = cardAssets.cardImages;
+const backOfCard = cardAssets.backOfCard;
 
 
 const PhaserGame = () => {
@@ -12,6 +16,10 @@ const PhaserGame = () => {
     // any preloaded assest should be here.
     function preload() {
       //console.log("Loading..", cardImages);
+    console.log("back of card: ", backOfCard);
+
+      this.load.image(backOfCard, backOfCard["cardBack"])
+      
       for (let cardImage in cardImages) {
         this.load.image(cardImage, cardImages[cardImage])
 
@@ -23,15 +31,16 @@ const PhaserGame = () => {
 
       fpsMeter = game.add.text(20, 20, 'FPS: ' + fpsMeter, { font: '' });
       
-      for (let cardImage in cardImages) {
-        const cardPhys = game.physics.add.image(Math.random() * 400, Math.random() * 300, cardImage);
-        cardPhys.setScale(0.2)
-        cardPhys.setVelocity(Math.random() * 200, Math.random() * 200);
-        cardPhys.setBounce(1, 1);
-        cardPhys.setCollideWorldBounds(true);
-      }
+      // for (let cardImage in cardImages) {
+      //   const cardPhys = game.physics.add.image(Math.random() * 400, Math.random() * 300, cardImage);
+      //   cardPhys.setScale(0.2)
+      //   cardPhys.setVelocity(Math.random() * 200, Math.random() * 200);
+      //   cardPhys.setBounce(1, 1);
+      //   cardPhys.setCollideWorldBounds(true);
+      // }
+
+      game.add.image(100, 100, "../../images/MASTR-cardback.png");
     };
-    
     
     function update() { 
       const loopStatus = this.sys.game.loop;
@@ -45,6 +54,7 @@ const PhaserGame = () => {
       parent: gameContainerRef.current, // Attach the game canvas to the container element
       width: 600, // Set the canvas width
       height: 450, // Set the canvas height
+      background: '../../images/wooden-backdrop.png',
       physics: {
         default: 'arcade', 
         arcade: {

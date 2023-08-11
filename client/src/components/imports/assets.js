@@ -24,7 +24,11 @@ const cardImages = {
   templar2 : require('../../images/templar2.png'),
   templar3 : require('../../images/templar3.png'),
   templar4 : require('../../images/templar4.png'),
-  templar5 : require('../../images/templar5.png'),
+  templar5 : require('../../images/templar5.png')
 }
 
-export default cardImages;
+const backOfCard = { cardBack : require('../../images/MASTR-cardback.png') }
+
+const cardAssets = { cardImages, backOfCard };
+
+export default cardAssets;
