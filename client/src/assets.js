@@ -36,7 +36,8 @@ const otherImages = {
   navLogo : require('./images/MASTR-logo.png'),
   letterhead : require ('./images/letterhead.png'),
   backdrop : require('./images/wooden-backdrop.png'),
-  chatSign : require('./images/chat.png')
+  chatSign : require('./images/chat.png'),
+  scoreboard : require('./images/MASTR-scoreboard-no-text.png')
 };
 
 export { cardImages, otherImages };

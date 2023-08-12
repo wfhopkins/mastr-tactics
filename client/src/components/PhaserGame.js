@@ -28,6 +28,7 @@ const PhaserGame = () => {
     function preload() {
       this.load.image('backdrop', otherImages.backdrop);
       this.load.image('cardBack', otherImages.cardBack);
+      this.load.image('scoreboard', otherImages.scoreboard);
       
       // const key = deck.cards[0];
       // console.log(key.phaserName, key.image);
@@ -54,6 +55,12 @@ const PhaserGame = () => {
       const game = this;
       game.add.image(10,10, 'backdrop');
       fpsMeter = game.add.text(20, 20, 'FPS: ' + fpsMeter, { font: '' });
+
+      //basic tempalte for eventaul dynamic score counter  (NEW)
+      const scoreBoard = game.add.image(72, 250, 'scoreboard').setScale(0.25);
+      const roundTracker = game.add.text(36, 203, 'Round ' + 5);
+      const counter = game.add.text(33, 230, 14 + ' VS ' + 22);
+
       debug = game.add.text(20, 40, 'Debug:', { font: '' });
       // for (let card of deck.cards) {
       //   const cardPhys = game.physics.add.image(Math.random() * 400, Math.random() * 300, card.phaserName);
