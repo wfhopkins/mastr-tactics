@@ -10,6 +10,7 @@ import Lore from '../components/Lore';
 import About from '../components/About';
 import Rules from '../components/Rules';
 import Cards from '../components/Cards';
+import { otherImages } from '../assets';
 
 
 const Welcome = ({ auth, logout }) => {
@@ -78,7 +79,7 @@ const Welcome = ({ auth, logout }) => {
   
   return (
     <div className="welcome-container">
-      <NavBar auth={auth} logout={logout}onLeaderboardButtonClick={openSlidingPane} onCardsButtonClick={handleCardsButtonClick} onLoreButtonClick={handleLoreButtonClick} onAboutButtonClick={handleAboutButtonClick} onRulesButtonClick={handleRulesButtonClick} />
+      <NavBar auth={auth} logout={logout}onLeaderboardButtonClick={openSlidingPane} onLogoButtonClick={handleComponentClose} onCardsButtonClick={handleCardsButtonClick} onLoreButtonClick={handleLoreButtonClick} onAboutButtonClick={handleAboutButtonClick} onRulesButtonClick={handleRulesButtonClick} />
       {/* <h4>This is the welcome page</h4>
       <p>Check out the rules page!</p>
       <Chat /> */}
@@ -86,7 +87,9 @@ const Welcome = ({ auth, logout }) => {
       <GameModal isOpen={modalOpen} onClose={handleModalClose}>
         <PhaserGame />
       </GameModal>  */}
-
+      <button className="nav-button-chat" onClick={openSlidingPane}>
+        <img className="chat-logo" src={otherImages.chatSign} alt="Chat" />
+      </button>
       <div className={`rules-container ${isLoad ? 'pre-load' : ''} ${isRulesVisible ? 'slide-down' : 'fade-out'}`}>
         <Rules onClose={handleComponentClose} />
       </div>
@@ -111,6 +114,7 @@ const Welcome = ({ auth, logout }) => {
 >
   {/* Content of the sliding pane */}
   <p>This is the content of the sliding pane.</p>
+  <Chat />
 </SlidingPane>
     </div>
   );

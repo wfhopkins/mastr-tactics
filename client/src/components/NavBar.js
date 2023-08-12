@@ -1,11 +1,11 @@
 import React from 'react';
 import { otherImages } from '../assets';
 
-const NavBar = ({ auth, logout, onLoreButtonClick, onAboutButtonClick, onRulesButtonClick, onCardsButtonClick, onLeaderboardButtonClick }) => {
+const NavBar = ({ auth, logout, onLoreButtonClick, onAboutButtonClick, onRulesButtonClick, onCardsButtonClick, onLeaderboardButtonClick, onLogoButtonClick }) => {
   return (
     <nav className="nav-bar">
       <div id="nav-content">
-        <button className="nav-button" onClick={onAboutButtonClick}>
+        <button className="nav-button" onClick={onLogoButtonClick}>
         <img className="nav-logo" src={otherImages.letterhead} alt="Logo" />
         </button>
 

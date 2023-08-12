@@ -2,7 +2,6 @@ import React, { useRef, useEffect } from 'react';
 import Phaser from 'phaser';
 import { cardImages, otherImages  } from '../assets.js'
 
-
 const PhaserGame = () => {
   // Create a reference to the game container element
   const gameContainerRef = useRef(null);
@@ -12,15 +11,23 @@ const PhaserGame = () => {
     // any preloaded assets should be here.
     function preload() {
       //console.log("Loading..", cardImages);
+    // console.log("back of card: ", backOfCard);
+
+    this.load.image('backdrop', otherImages.backdrop);
+      
       for (let cardImage in cardImages) {
         this.load.image(cardImage, cardImages[cardImage])
       }
       this.load.image("cardBack", otherImages.cardBack)
 
+
     };
     // main game loop
     function create() {
       const game = this;
+      
+      const backdrop = game.add.image(10,10, "backdrop");
+      backdrop.setScale(1);
 
       fpsMeter = game.add.text(20, 20, 'FPS: ' + fpsMeter, { font: '' });
       
@@ -31,10 +38,9 @@ const PhaserGame = () => {
       //   cardPhys.setBounce(1, 1);
       //   cardPhys.setCollideWorldBounds(true);
       // }
-      const cardBack = game.add.image(Math.random() * 400, Math.random() * 300, "cardBack");
+      const cardBack = game.add.image(200,200, "cardBack");
       cardBack.setScale(0.2);
     };
-    
     
     function update() { 
       const loopStatus = this.sys.game.loop;
@@ -48,6 +54,7 @@ const PhaserGame = () => {
       parent: gameContainerRef.current, // Attach the game canvas to the container element
       width: 600, // Set the canvas width
       height: 450, // Set the canvas height
+      backgroundColor: '#000',
       physics: {
         default: 'arcade', 
         arcade: {
@@ -60,7 +67,13 @@ const PhaserGame = () => {
         preload: preload,
         create: create,
         update: update,
-      }
+      },
+      // callbacks: {
+      //   postBoot: (game) => {
+      //     game.canvas.style.backgroundImage = 'backdrop')`;
+      //     game.canvas.style.backgroundSize = 'cover';
+      //   }
+      // }
     });
 
   }, []); // Run this effect only once after initial render
