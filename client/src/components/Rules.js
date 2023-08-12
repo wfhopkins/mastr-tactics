@@ -9,7 +9,6 @@ const Rules = ({ onClose }) => {
   const containRef = useRef();
   const parchmentRef = useRef();
 
-  
   useEffect(() => {
     
     setIsVisible(true); // Trigger the animation when component mounts
