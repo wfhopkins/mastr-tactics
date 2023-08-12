@@ -2,6 +2,7 @@ import React, { useRef, useEffect } from 'react';
 import Phaser from 'phaser';
 import { cardImages, otherImages  } from '../assets.js'
 import letterhead from '../images/letterhead.png'
+import scoreboard from '../images/MASTR-scoreboard.png'
 import Card from '../helpers/card.js';
 import Dealer from '../helpers/dealer.js';
 import Zone from '../helpers/zone.js';
@@ -17,6 +18,8 @@ const PhaserGame = () => {
       //console.log("Loading..", cardImages);
     // console.log("back of card: ", backOfCard);
     this.load.image('letterhead', letterhead)
+
+    this.load.image('scoreboard', scoreboard)
 
     this.load.image('backdrop', otherImages.backdrop);
       
@@ -36,25 +39,45 @@ const PhaserGame = () => {
 
       fpsMeter = game.add.text(20, 20, 'FPS: ' + fpsMeter, { font: '' });
       
-      this.add.image(315, 220, 'letterhead').setScale(0.25);
+      this.add.image(300, 220, 'letterhead').setScale(0.25);
       
       this.zone = new Zone(this);
       this.dropZone = this.zone.renderZone();
       this.outline = this.zone.renderOutline(this.dropZone);
       
+      this.add.image(75, 230, 'scoreboard').setScale(0.25);
+
       this.add.rectangle(550, 155, 70, 100, '0xf5f5f5');
       this.add.text(515, 150, 'DISCARD', {color: '0xfffff'});
       this.add.sprite(550, 290, 'cardBack').setScale(0.125);
 
+      const playerBoard = this.add.group();
+      const playerSprites = [
+        this.add.sprite(200, 300, 'archer1').setScale(0.16),
+        this.add.sprite(200 + 100, 300, 'mage2').setScale(0.16),
+        this.add.sprite(200 + 200, 300, 'templar4').setScale(0.16)
+      ]
+      playerBoard.addMultiple(playerSprites);
+
+
+      const opponentBoard = this.add.group();
+      const opponentSprites = [
+        this.add.sprite(200, 155, 'sorcerer2').setScale(0.16),
+        this.add.sprite(200 + 100, 155, 'rogue3').setScale(0.16),
+        this.add.sprite(200 + 200, 155, 'templar2').setScale(0.16)
+      ]
+      opponentBoard.addMultiple(opponentSprites);
+
+
       const playerHand = this.add.group();
       for (let i = 0; i < 5; i++) {
-        const sprite = this.add.sprite(190 + (i * 60), 400, 'archer1').setScale(0.12);
+        const sprite = this.add.sprite(190 + (i * 55), 410, 'archer1').setScale(0.12);
         playerHand.add(sprite);
       }
 
       const opponentHand = this.add.group();
       for ( let i = 0; i < 5; i++) {
-        const sprite = this.add.sprite(190 + (i * 60), 45, 'cardBack').setScale(0.09);
+        const sprite = this.add.sprite(190 + (i * 55), 45, 'cardBack').setScale(0.09);
         opponentHand.add(sprite);
       }
 
