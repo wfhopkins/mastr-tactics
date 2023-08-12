@@ -30,8 +30,8 @@ const cardImages = {
 const otherImages = {
   cardBack : require('./images/cardback.png'),
   loginImage : require('./images/login-page-image.png'),
-  rulesImage : require('./images/rules-image.png'),
   rulesImage2 : require('./images/rules-image2.png'),
+  rulesImage : require('./images/rules-image.png'),
   rulesImage3 : require('./images/rules-image3.png'),
   navLogo : require('./images/MASTR-logo.png'),
   letterhead : require ('./images/letterhead.png'),
