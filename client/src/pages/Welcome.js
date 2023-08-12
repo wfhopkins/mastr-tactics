@@ -1,16 +1,21 @@
 import React, { useState } from 'react';
+import SlidingPane from 'react-sliding-pane';
 import Chat from '../components/Chat';
 import GameModal from '../components/GameModal';
 import PhaserGame from '../components/PhaserGame';
 import NavBar from '../components/NavBar';
 import '../styles/NavBar.css';
+import '../styles/SlidingPane.css';
 import Lore from '../components/Lore';
 import About from '../components/About';
 import Rules from '../components/Rules';
 import Cards from '../components/Cards';
+import { otherImages } from '../assets';
+
 
 const Welcome = ({ auth, logout }) => {
   //These are the state variables for managing component visibility
+  const [isPaneOpen, setIsPaneOpen] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
   const [isLoreVisible, setIsLoreVisible] = useState(false);
   const [isAboutVisible, setIsAboutVisible] = useState(false);
@@ -18,6 +23,13 @@ const Welcome = ({ auth, logout }) => {
   const [isCardsVisible, setIsCardsVisible] = useState(false);
   const [isLoad, setLoad] = useState(true); // This is how you won't have a very quick rendering of the other components
 
+  const openSlidingPane = () => {
+    setIsPaneOpen(true);
+  };
+
+  const closeSlidingPane = () => {
+    setIsPaneOpen(false);
+  };
   const handleModalOpen = () => {
     setModalOpen(true);
   };
@@ -30,6 +42,7 @@ const Welcome = ({ auth, logout }) => {
     setIsLoreVisible(!isLoreVisible);
     setIsAboutVisible(false); // Close the About component if open
     setIsRulesVisible(false); // Close the Rules component if open
+    setIsCardsVisible(false);
     setLoad(false);
   };
 
@@ -37,6 +50,7 @@ const Welcome = ({ auth, logout }) => {
     setIsAboutVisible(!isAboutVisible);
     setIsLoreVisible(false); // Close the Lore component if open
     setIsRulesVisible(false); // Close the Rules if open
+    setIsCardsVisible(false);
     setLoad(false);
   };
 
@@ -44,11 +58,12 @@ const Welcome = ({ auth, logout }) => {
     setIsRulesVisible(!isRulesVisible);
     setIsLoreVisible(false);
     setIsAboutVisible(false); 
+    setIsCardsVisible(false);
     setLoad(false);
   };
   
   const handleCardsButtonClick = () => {
-    setIsCardsVisible(!isRulesVisible);
+    setIsCardsVisible(!isCardsVisible);
     setIsRulesVisible(false);
     setIsLoreVisible(false);
     setIsAboutVisible(false); 
@@ -64,15 +79,17 @@ const Welcome = ({ auth, logout }) => {
   
   return (
     <div className="welcome-container">
-      <NavBar auth={auth} logout={logout} onCardsButtonClick={handleCardsButtonClick} onLoreButtonClick={handleLoreButtonClick} onAboutButtonClick={handleAboutButtonClick} onRulesButtonClick={handleRulesButtonClick} />
+      <NavBar auth={auth} logout={logout}onLeaderboardButtonClick={openSlidingPane} onLogoButtonClick={handleComponentClose} onCardsButtonClick={handleCardsButtonClick} onLoreButtonClick={handleLoreButtonClick} onAboutButtonClick={handleAboutButtonClick} onRulesButtonClick={handleRulesButtonClick} />
       {/* <h4>This is the welcome page</h4>
       <p>Check out the rules page!</p>
       <Chat /> */}
-      <button onClick={handleModalOpen}>Play Now</button>
+      {/* <button onClick={handleModalOpen}>Play Now</button>
       <GameModal isOpen={modalOpen} onClose={handleModalClose}>
         <PhaserGame />
-      </GameModal> 
-
+      </GameModal>  */}
+      <button className="nav-button-chat" onClick={openSlidingPane}>
+        <img className="chat-logo" src={otherImages.chatSign} alt="Chat" />
+      </button>
       <div className={`rules-container ${isLoad ? 'pre-load' : ''} ${isRulesVisible ? 'slide-down' : 'fade-out'}`}>
         <Rules onClose={handleComponentClose} />
       </div>
@@ -89,6 +106,16 @@ const Welcome = ({ auth, logout }) => {
          <Cards onClose={handleComponentClose} />
       </div>
       
+      <SlidingPane
+  isOpen={isPaneOpen}
+  title="Sliding Pane Title"
+  onRequestClose={closeSlidingPane}
+  from="right"
+>
+  {/* Content of the sliding pane */}
+  <p>This is the content of the sliding pane.</p>
+  <Chat />
+</SlidingPane>
     </div>
   );
 };
