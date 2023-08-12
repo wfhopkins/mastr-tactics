@@ -33,7 +33,8 @@ const otherImages = {
   rulesImage : require('./images/rules-image.png'),
   rulesImage2 : require('./images/rules-image2.png'),
   rulesImage3 : require('./images/rules-image3.png'),
-
+  navLogo : require('./images/MASTR-logo.png'),
+  letterhead : require ('./images/letterhead.png')
 };
 
 export { cardImages, otherImages };
