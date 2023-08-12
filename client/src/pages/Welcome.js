@@ -80,13 +80,14 @@ const Welcome = ({ auth, logout }) => {
   return (
     <div className="welcome-container">
       <NavBar auth={auth} logout={logout}onLeaderboardButtonClick={openSlidingPane} onLogoButtonClick={handleComponentClose} onCardsButtonClick={handleCardsButtonClick} onLoreButtonClick={handleLoreButtonClick} onAboutButtonClick={handleAboutButtonClick} onRulesButtonClick={handleRulesButtonClick} />
-      {/* <h4>This is the welcome page</h4>
+      <h4>This is the welcome page</h4>
       <p>Check out the rules page!</p>
-      <Chat /> */}
-      {/* <button onClick={handleModalOpen}>Play Now</button>
+      <Chat />
+      <button onClick={handleModalOpen}>Play Now</button>
       <GameModal isOpen={modalOpen} onClose={handleModalClose}>
         <PhaserGame />
-      </GameModal>  */}
+      </GameModal> 
+      <br/>
       <button className="nav-button-chat" onClick={openSlidingPane}>
         <img className="chat-logo" src={otherImages.chatSign} alt="Chat" />
       </button>
