@@ -1,9 +1,102 @@
+const SMALLCARDSCALE = 0.25;
+const TINYCARDSCALE = 0.16;
+
+const winnerTable = {
+  "archer" : ["sorcerer", "rogue"],
+  "sorcerer" : ["templar", "mage"],
+  "templar" : ["rogue", "archer"],
+  "rogue"  :  ["mage", "sorcerer"],
+  "mage" : ['archer', 'templar']
+}
+
+
+
+class Battlefield {
+  constructor() {
+    this.playerArea = new Collection();
+    this.opponentArea = new Collection();
+  };
+}
+
+class Gamestate {
+  constructor(player, deck, discard) {
+    this.player = player;
+    this.battlefield = new Battlefield();
+    this.player = player;
+    this.deck = deck;
+    this.discard = discard;
+  }
+
+  
+  playToZone(card) {
+    this.battlefield.player.receiveCard(card);  
+  }
+
+  doBattle() {
+    let winner = undefined;
+    let playerPoints = 0;
+    if ((this.battlefield.playerArea.length === 3) && (this.battlefield.opponentArea.length === 3)) {
+      for (let skirmish = 0; skirmish < this.battlefield.player.length - 1; skirmish++) {
+        let victory = undefined;
+        if (this.battlefield.playerArea[skirmish].faction  === this.battlefield.opponentArea[skirmish].faction) {
+          if (this.battlefield.playerArea[skirmish].rank > this.battlefield.opponentArea[skirmish].rank) {
+            winner = "player";
+          } else {
+            winner = "opponent";
+          };
+        }
+        if (winnerTable[this.battlefield.playerArea[skirmish].faction].includes(this.battlefield.opponentAreaArea[skirmish].faction))
+          this.player.addPoints(1);
+          playerPoints++;
+        };
+        if (!winner) {
+          const opponentPoints = 3 - playerPoints;
+          if (playerPoints > opponentPoints) {
+            winner = "player"
+
+          } else {
+            winner = "opponent"
+          }
+        }
+    } else { return };
+
+    let playerRankTotal = 0;
+    let opponentRankTotal = 0;
+    for (let skirmish = 0; skirmish < this.battlefield.player.length - 1; skirmish++) {
+      playerRankTotal += this.battlefield.playerArea[skirmish].rank;
+      opponentRankTotal += this.battlefield.opponentArea[skirmish].rank;
+
+      this.discard.receiveCard(this.battlefield.playerArea[skirmish]);
+      this.discard.receiveCard(this.battlefield.opponentArea[skirmish]);
+    } 
+    if (playerRankTotal === opponentRankTotal) {
+      this.player.addPoints(1);
+    }
+    if (playerRankTotal > opponentRankTotal) {
+      this.player.addPoints(2);
+    };
+  }
+} 
+
+
+
 // A player has a name, score and new hand drawn from
 // a passed-in deck
 class Player {
-  constructor(deck){
+  constructor(deck, opponentName){
     this.hand = new Hand(deck);
+    this.currentPoints = 0;
+    this.opponentName = opponentName;
   };
+
+  set myTurn(newState) {this.turn = newState};
+  set points(newPointCount) {this.currentPoints = newPointCount};
+
+  get points() { return this.currentPoints};
+  get myTurn() { return this.turn};
+  
+  addPoints(points) {this.points += points};
+
   // takes a card and adds it to this player's hand
   drawCard (deck) {
     this.hand.receiveCard(deck.giveCard());
@@ -56,9 +149,18 @@ class Collection {
     if (deck) {
       this.currentCards = deck;
     } else this.currentCards = [];
+    this.facedownState = false;
+    this.cardStack = [];
+    this.stacked = false; //render as a stack?
+    this.currentScale = SMALLCARDSCALE;
   }
   get cards() { return this.currentCards };
+  get facedown() { return this.facedownState };
+  get scale() { return this.currentScale };
+
   set cards(newCards) {this.currentCards = newCards};
+  set facedown(newState) {this.facedownState = newState};
+  set scale(newState) {this.currentScale = newState};
 
   // Choose a random index within the boundaries of the collection
   // and remove it from the array, then return that card
@@ -95,6 +197,30 @@ class Collection {
     return collectionList;
   }
 
+  showCards(game, x, y) {
+    this.unshowCards();
+    let cardImage = undefined;
+    if (this.currentCards === []) {
+      return;
+    } else {
+      for (let cardIndex = this.currentCards.length-1; cardIndex >= 0; cardIndex--) {
+        if (this.facedown) {
+          cardImage =  game.add.image(cardIndex * (this.stacked ? 2 : 20) + x, y, 'cardBack').setScale(this.currentScale);
+        } else {
+          cardImage =  game.add.image(cardIndex * (this.stacked ? 2 : 20) + x, y, this.currentCards[cardIndex].phaserName).setScale(this.currentScale);
+        }
+        this.cardStack.push(cardImage);
+      }
+    }
+  }
+
+  unshowCards() {
+    this.cardStack.forEach((card) => {
+      card.destroy();
+    })
+    this.cardStack = [];
+  } 
+
 }
 
 // A deck is a type of collection, but constructs a new set of cards 
@@ -102,6 +228,7 @@ class Collection {
 class Deck extends Collection {
   constructor(factions, imageObj) {
     super();
+    this.stack = true;
     const newDeck = [];
     for (let factionIndex = 0; factionIndex < factions.length; factionIndex++) {
       for (let rankIndex = 0; rankIndex < 5; rankIndex++) {
@@ -135,5 +262,8 @@ module.exports = {
   Deck,
   Hand,
   Card,
-  Collection
+  Collection,
+  Gamestate,
+  SMALLCARDSCALE, 
+  TINYCARDSCALE
 }
