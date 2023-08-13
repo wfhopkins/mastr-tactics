@@ -28,6 +28,7 @@ const PhaserGame = () => {
     function preload() {
       this.load.image('backdrop', otherImages.backdrop);
       this.load.image('cardBack', otherImages.cardBack);
+      this.load.image('scoreboard', otherImages.scoreboard);
       
       // const key = deck.cards[0];
       // console.log(key.phaserName, key.image);
@@ -54,6 +55,20 @@ const PhaserGame = () => {
       const game = this;
       game.add.image(10,10, 'backdrop');
       fpsMeter = game.add.text(20, 20, 'FPS: ' + fpsMeter, { font: '' });
+
+      //basic tempalte for eventaul dynamic score counter  (NEW)
+      const scoreBoard = game.add.image(72, 250, 'scoreboard').setScale(0.25);
+      const roundTracker = game.add.text(36, 203, 'Round ' + 5);
+      const counter = game.add.text(33, 230, 14 + ' VS ' + 22);
+
+      //placeholder for deck object
+      const deckHolder = game.add.sprite(530, 300, 'cardBack').setScale(0.16);
+
+      //placeholder for discard pile
+      const discardPile = game.add.rectangle(530, 140, 95, 135, '0xf5f5f5');
+      game.add.text(495, 130, 'DISCARD', {  fill: '#aaaaaa'});
+
+
       debug = game.add.text(20, 40, 'Debug:', { font: '' });
       // for (let card of deck.cards) {
       //   const cardPhys = game.physics.add.image(Math.random() * 400, Math.random() * 300, card.phaserName);
@@ -79,6 +94,8 @@ const PhaserGame = () => {
       // console.assert(this.textures.exists(key.phaserName), `Key ${key.phaserName} should exist`);
       // game.add.image(0, 20, key.phaserName);
 
+
+      //comment out to see board object placeholders
       showCards(this, 100 ,100, deck.cards);
       showCards(this, 100 ,200, player.hand.cards);
       console.log("deck", deck.cards);
