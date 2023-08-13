@@ -21,6 +21,7 @@ const PhaserGame = () => {
   useEffect(() => {
     // global game variables and constants;
     const deck = new Deck(factions, cardImages);
+    let deckHolder;
     let player = undefined; 
     let fpsMeter = '';
     let debug = '';
@@ -62,7 +63,8 @@ const PhaserGame = () => {
       const counter = game.add.text(33, 230, 14 + ' VS ' + 22);
 
       //placeholder for deck object
-      const deckHolder = game.add.sprite(530, 300, 'cardBack').setScale(0.16);
+      deckHolder = this.add.sprite(530, 300, 'cardBack').setScale(0.16);
+      deckHolder.setInteractive();
 
       //placeholder for discard pile
       const discardPile = game.add.rectangle(530, 140, 95, 135, '0xf5f5f5');
@@ -122,6 +124,14 @@ const PhaserGame = () => {
       const loopStatus = this.sys.game.loop;
       fpsMeter.setText("FPS :" + loopStatus.actualFps);  
       //debug.setText(debugBuffer);
+
+      if (deckHolder) {
+        deckHolder.on('pointerup', () => {
+          const cardTexture = deck.cards[0].phaserName.toString();
+          deckHolder.setTexture(cardTexture);
+        });
+
+      }
     };
 
     function render() {
