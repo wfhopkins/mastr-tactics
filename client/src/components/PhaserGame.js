@@ -1,7 +1,7 @@
 import React, { useRef, useEffect } from 'react';
 import Phaser from 'phaser';
 import { cardImages, otherImages } from '../assets.js'
-import {Player, Deck, Hand, Card, Collection} from '../helpers/cardclass.js'
+import {Player, Deck, Hand, Card, Collection, Gamestate} from '../helpers/cardclass.js'
 import { SMALLCARDSCALE, TINYCARDSCALE } from '../helpers/cardclass.js'
 
 const factions = ["archer", "mage", "rogue", "sorcerer", "templar"];
@@ -37,22 +37,21 @@ const PhaserGame = () => {
         //console.log(cardphaserName, card.image)
       };
       //if first player then...
-      player = new Player(deck);
+      player = new Player(deck, "opponent_name");
       // then pass to other player otherwise wait for deck from ws
+      // WS(tooppenent, deck);
+      // else 
 
-      
-     
+      //  wait_to_recieve_deck and playername;
+      // OK, deck ready...
     };
 
 
     // main game loop    
     function create() {
       const game = this;
-      fpsMeter = game.add.text(20, 20, 'FPS: ' + fpsMeter, { font: '' });
+      let debugText = '';
       game.add.image(0, 0 , 'backdrop');
-
-
-
 
       //basic tempalte for eventaul dynamic score counter  (NEW)
       const scoreBoard = game.add.image(72, 250, 'scoreboard').setScale(SMALLCARDSCALE);
@@ -60,59 +59,49 @@ const PhaserGame = () => {
       const counter = game.add.text(33, 230, 14 + ' VS ' + 22);
 
       //placeholder for deck object
-      const deckHolder = game.add.sprite(530, 300, 'cardBack').setScale(TINYCARDSCALE);
+      //const deckHolder = game.add.sprite(530, 300, 'cardBack').setScale(TINYCARDSCALE);
 
-      discardPile.receiveCard(player.hand.giveRandomCard())
-
-      //placeholder for discard pile
-      const discardArea = game.add.rectangle(530, 140, 95, 135, '0xf5f5f5');
-      game.add.text(495, 130, 'DISCARD', {  fill: '#aaaaaa'});
-      discardPile.scale = TINYCARDSCALE;
-      discardPile.showCards(game, 495, 130);
+      // boundary for discard pile
+        const discardArea = game.add.rectangle(530, 140, 95, 135, '0x522c2');
+        game.add.text(495, 130, 'DISCARD', {  fill: '#aaaaaa'});
+        
       
-      debug = game.add.text(20, 40, 'Debug:', { font: '' });
+      // game.input.once('pointerup', () =>
+      // {
+      //   player.hand.unshowCards(game);
+      // });
       
+      ///////////////////////////////////// BEGIN GAME LOOP //////////////////////////////////////
+      ///////////////////////////////////// BEGIN GAME LOOP //////////////////////////////////////
+      ///////////////////////////////////// BEGIN GAME LOOP //////////////////////////////////////
+      ///////////////////////////////////// BEGIN GAME LOOP //////////////////////////////////////
+
+      console.log("deck", deck.cards.show);
+      const gameState = new Gamestate(player, deck, discardPile)
       
-      // player.hand.facedown = true;
-      // player.hand.stacked = true;
-      player.hand.showCards(this, 100, 150);
+      // loop: keep going until we get to 25
+      // ready to play our turn
+      // show our hand
+      // show opponents "hand" (actually just five cardbacks of our own hand);
+      // show the discard pile
+      // show deck
+      // show scoreboard (player: round, points, the names)
+      // endloop if done
 
-      game.input.once('pointerdown', () =>
-      {
-          player.hand.unshowCards(game);
-      });
+      ///////////////////////////////////// END GAME LOOP ////////////////////////////////////////
+      ///////////////////////////////////// END GAME LOOP ////////////////////////////////////////
+      ///////////////////////////////////// END GAME LOOP ////////////////////////////////////////
+      ///////////////////////////////////// END GAME LOOP ////////////////////////////////////////
 
-
-
-
-
-      //comment out to see board object placeholders
-      // showCards(this, 100 ,100, deck.cards);
-      // showCards(this, 100 ,200, player.hand.cards);
-      // console.log("deck", deck.cards);
-      // console.log("hand", player.hand.cards);
-
-
-
-      // game.add.image(0, 20, key.phaserName);
-        //console.log(typeof player.hand.cards[0].phaserName);
-        //game.add.image(0, 20, player.hand.cards[0].phaserName.toString();
-
-        // const key = player.hand.cards[0].phaserName;
-        // console.log(key);
-        // console.assert(this.textures.exists(key), `Texture key ${key} should exist`);
-      //(player.cards);
-      
-      debug.setText(
-        `> Deck: ${deck.getCollection(true)} \n` +
-        `> ${player.hand.cards[0].phaserName} \n`
-      );
+      fpsMeter = game.add.text(20, 20, 'FPS: ' + fpsMeter, { font: '' });
+      debug = game.add.text(20, 40, debugText, { font: '' });    
     };
     
     function update() { 
       const loopStatus = this.sys.game.loop;
       fpsMeter.setText("FPS :" + loopStatus.actualFps);  
       //debug.setText(debugBuffer);
+
     };
 
     function render() {
