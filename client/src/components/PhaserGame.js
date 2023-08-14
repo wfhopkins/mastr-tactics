@@ -58,7 +58,8 @@ const PhaserGame = () => {
       let debugText = '';
       game.add.image(XRES / 2, YRES / 2 , 'backdrop').setDisplaySize(XRES, YRES)
 
-
+      game.myEmitter = new Phaser.Events.EventEmitter();
+          
       //basic tempalte for eventaul dynamic score counter  (NEW)
       let scoreboardX = 76;
       let scoreboardY = 400;
@@ -84,6 +85,16 @@ const PhaserGame = () => {
       // {
       //   player.hand.unshowCards(game);
       // });
+
+      game.myEmitter.on('cardPlayed', (card) => {
+        console.log('Card played', card);
+      })
+
+      function playACard() {
+        player.hand.card.on('pointerup', playACard, game)
+        this.myEmitter.emit('cardPlayed', Card)
+      }
+
       
       ///////////////////////////////////// BEGIN GAME LOOP //////////////////////////////////////
       ///////////////////////////////////// BEGIN GAME LOOP //////////////////////////////////////
@@ -92,8 +103,6 @@ const PhaserGame = () => {
 
       console.log("deck", deck.cards.show);
       const gameState = new Gamestate(player, deck, discardPile)
-
-
 
       // loop: keep going until we get to 25
       
@@ -137,7 +146,6 @@ const PhaserGame = () => {
       const loopStatus = this.sys.game.loop;
       fpsMeter.setText("FPS :" + loopStatus.actualFps);  
       //debug.setText(debugBuffer);
-
     };
 
     function render() {
