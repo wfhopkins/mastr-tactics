@@ -12,6 +12,9 @@ const Chat = ({ socket, currentUser, opponent }) => {
         from: currentUser,
         to: opponent,
       };
+
+      // Update the local state to display your sent message immediately
+      setMessages((prevMessages) => [...prevMessages, newMessage]);
       socket.emit('privateMessage', newMessage);
       setMessageInput('');
     }

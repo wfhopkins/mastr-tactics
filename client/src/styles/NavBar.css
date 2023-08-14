@@ -5,7 +5,7 @@
 .nav-bar {
   width: 100%;
   min-width: 560px;
-  height: 100px;
+  height: 120px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -20,7 +20,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-left: 1rem;
+  margin-top: 0.5rem;
   
 }
 
@@ -56,6 +56,23 @@
 
 }
 
+.nav-button-leader {
+  margin: 0.3rem;
+  margin-top: 10rem;
+  padding: 5px 10px;
+  background-color: #55555500;
+  border: none;
+  color: rgb(27, 26, 26);
+  cursor: pointer;
+  font-size: larger;
+  width: auto;
+  margin-left: -0.6rem;
+  position: absolute; /* Ensure proper positioning */
+  left: 0; /* Position on the left side */
+  z-index: 100; /* Set a higher z-index */
+
+}
+
 .nav-logo {
   width: auto; /* Adjust the width as needed */
   height: 35px; /* Adjust the height as needed */
@@ -63,13 +80,21 @@
 
 }
 
-.chat-logo {
+.chat-logo, .leader-logo {
   width: auto;
-  height: 55px;
+  height: 80px;
+}
+
+/* Adjust the max-width and max-height values as needed */
+.leaderBoardImg {
+  max-width: 100%; /* Set maximum width to fit within the sliding pane */
+  max-height: 100%; /* Set maximum height to fit within the sliding pane */
+  display: block; /* Ensure the image behaves as a block element */
+  margin: auto; /* Center the image horizontally within the sliding pane */
 }
 
 /* Style for the logo button */
-.nav-logo-button, {
+.nav-logo-button {
   width: 70px; /* Adjust the width as needed */
   height: 70px; /* Adjust the height as needed */
   margin: 0 10px; /* Adjust margins as needed */
@@ -79,4 +104,9 @@
   background-position: center center;
   border: none;
   cursor: pointer;
+}
+
+.sliding-pane {
+  background: linear-gradient(to right, #ff6b6b, #4ecdc4); /* Customize the gradient colors */
+  color: white; /* Set text color to contrast with the background */
 }

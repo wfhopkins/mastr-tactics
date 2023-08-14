@@ -138,6 +138,10 @@ const Welcome = ({ auth, logout, socket }) => {
           <img className="chat-logo" src={otherImages.playSign} alt="Play" />
         </button>
 
+        <button className="nav-button-leader" onClick={openSlidingPane}>
+          <img className="leader-logo" src={otherImages.leaderboard} alt="Leaderboard" />
+        </button>
+
         <img className="welcome-image" src={otherImages.welcomeImage} alt="welcome"/>
 
         <div className={`rules-container ${isLoad ? 'pre-load' : ''} ${isRulesVisible ? 'slide-down' : 'fade-out'}`}>
@@ -170,13 +174,16 @@ const Welcome = ({ auth, logout, socket }) => {
 
         <SlidingPane
           isOpen={isPaneOpen}
-          title="Sliding Pane Title"
+          title="Leaderboard Update"
           onRequestClose={closeSlidingPane}
           from="right"
+          style={{
+            background: 'linear-gradient(to right, #ff6b6b, #4ecdc4)',
+            color: 'white',
+          }}
         >
           {/* Content of the sliding pane */}
-          <p>This is the content of the sliding pane.</p>
-          <Chat />
+          <img className="leaderBoardImg" src={otherImages.leaderboadImage} alt="Leaderboard" />
         </SlidingPane>
       </div>
 
