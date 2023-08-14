@@ -2,7 +2,7 @@ import React, { useRef, useEffect } from 'react';
 import Phaser from 'phaser';
 import { cardImages, otherImages } from '../assets.js'
 import {Player, Deck, Hand, Card, Collection, Gamestate} from '../helpers/cardclass.js'
-import { SMALLCARDSCALE, TINYCARDSCALE } from '../helpers/cardclass.js'
+import { SMALLCARDSCALE, TINYCARDSCALE, XRES, YRES } from '../helpers/cardclass.js'
 
 const factions = ["archer", "mage", "rogue", "sorcerer", "templar"];
 
@@ -29,7 +29,11 @@ const PhaserGame = () => {
     // any preloaded assets should be here.
     function preload() {
       this.load.image('backdrop', otherImages.backdrop);
-      this.load.image('cardBack', otherImages.cardBack);
+
+      // this.load.image('backdrop', otherImages.backdrop).displayWidth = 600;
+      // this.load.image('backdrop', otherImages.backdrop).displayHeight = 800;
+
+      this.load.image('cardBack', otherImages.cardBack)
       this.load.image('scoreboard', otherImages.scoreboard);
       
       for (let card of deck.cards) {
@@ -38,6 +42,7 @@ const PhaserGame = () => {
       };
       //if first player then...
       player = new Player(deck, "opponent_name");
+      player.hand.scale = TINYCARDSCALE;
       // then pass to other player otherwise wait for deck from ws
       // WS(tooppenent, deck);
       // else 
@@ -51,19 +56,28 @@ const PhaserGame = () => {
     function create() {
       const game = this;
       let debugText = '';
-      game.add.image(0, 0 , 'backdrop');
+      game.add.image(XRES / 2, YRES / 2 , 'backdrop').setDisplaySize(XRES, YRES)
+
 
       //basic tempalte for eventaul dynamic score counter  (NEW)
-      const scoreBoard = game.add.image(72, 250, 'scoreboard').setScale(SMALLCARDSCALE);
-      const roundTracker = game.add.text(36, 203, 'Round ' + 5);
-      const counter = game.add.text(33, 230, 14 + ' VS ' + 22);
+      let scoreboardX = 76;
+      let scoreboardY = 400;
+      const scoreBoard = game.add.image(scoreboardX, scoreboardY, 'scoreboard').setScale(SMALLCARDSCALE)
+      const roundTracker = game.add.text(scoreboardX - 36, scoreboardY - 47, 'Round ' + 5);
+      const counter = game.add.text(scoreboardX - 39, scoreboardY - 20, 14 + ' VS ' + 22);
+
+
+// //basic tempalte for eventaul dynamic score counter  (NEW)
+// const scoreBoard = game.add.image(72, 250, 'scoreboard').setScale(SMALLCARDSCALE);
+// const roundTracker = game.add.text(36, 203, 'Round ' + 5);
+// const counter = game.add.text(33, 230, 14 + ' VS ' + 22);
 
       //placeholder for deck object
       //const deckHolder = game.add.sprite(530, 300, 'cardBack').setScale(TINYCARDSCALE);
 
       // boundary for discard pile
-        const discardArea = game.add.rectangle(530, 140, 95, 135, '0x522c2');
-        game.add.text(495, 130, 'DISCARD', {  fill: '#aaaaaa'});
+        const discardArea = game.add.rectangle(530, YRES / 2 - 150, 95, 135, '0x522c2');
+        game.add.text(495, YRES / 2 - 150, 'DISCARD', {  fill: '#aaaaaa'});
         
       
       // game.input.once('pointerup', () =>
@@ -78,13 +92,35 @@ const PhaserGame = () => {
 
       console.log("deck", deck.cards.show);
       const gameState = new Gamestate(player, deck, discardPile)
-      
+
+
+
       // loop: keep going until we get to 25
+      
       // ready to play our turn
+      
       // show our hand
-      // show opponents "hand" (actually just five cardbacks of our own hand);
+      
+      
+      const opponentHand = new Collection();
+      for (let count = 0; count < 5; count++) {
+        opponentHand.receiveCard(new Card('dummy', 1, count, 'cardBack'));
+      }
+      opponentHand.scale = TINYCARDSCALE;
+      opponentHand.facedown = true;
+      
+      gameState.player.hand.showCards(game, XRES / 2 - 30, YRES - 120)
+      opponentHand.showCards(game, XRES / 2 - 30, YRES - 660);
+      
+      //show opponents "hand" (actually just five cardbacks of our own hand);
+      
       // show the discard pile
       // show deck
+      deck.facedown = true;
+      deck.stacked = true;
+      deck.scale = SMALLCARDSCALE;
+      deck.showCards(game, 510, YRES / 2 + 150);
+
       // show scoreboard (player: round, points, the names)
       // endloop if done
 
@@ -115,8 +151,8 @@ const PhaserGame = () => {
     new Phaser.Game({
       type: Phaser.AUTO, // Use the best rendering method available
       parent: gameContainerRef.current, // Attach the game canvas to the container element
-      width: 600, // Set the canvas width
-      height: 450, // Set the canvas height
+      width: XRES, // Set the canvas width
+      height: YRES, // Set the canvas height
       backgroundColor: '#000',
       physics: {
         default: 'arcade', 
