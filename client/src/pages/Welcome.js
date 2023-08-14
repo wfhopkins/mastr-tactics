@@ -128,7 +128,7 @@ const Welcome = ({ auth, logout, socket }) => {
       <div className="welcome-container">
         <NavBar auth={auth} logout={logout} onLeaderboardButtonClick={openSlidingPane} onLogoButtonClick={handleComponentClose} onCardsButtonClick={handleCardsButtonClick} onLoreButtonClick={handleLoreButtonClick} onAboutButtonClick={handleAboutButtonClick} onRulesButtonClick={handleRulesButtonClick} />
 
-        <button className="nav-button-chat" onClick={handleReadyToPlay}>
+        <button className="nav-button-play" onClick={handleReadyToPlay}>
           <img className="chat-logo" src={otherImages.playSign} alt="Play" />
         </button>
 

@@ -8,16 +8,18 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  z-index: 101;
 }
 
 .modal {
   width: auto; /* Allow the modal to adjust its width based on content */
-  max-height: 80%; /* Set the maximum modal height */
+  max-height: 100%; /* Set the maximum modal height */
   background-color: white;
   padding: 20px;
   border-radius: 8px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   overflow: auto; /* Enable scroll if content exceeds modal height */
+  z-index: 101;
 }
 
 .modal-close {

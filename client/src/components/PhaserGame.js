@@ -1,19 +1,18 @@
 import React, { useRef, useEffect } from 'react';
 import Phaser from 'phaser';
-import { cardImages, otherImages } from '../assets.js'
-import {Player, Deck, Hand, Card, Collection, Gamestate} from '../helpers/cardclass.js'
-import { SMALLCARDSCALE, TINYCARDSCALE } from '../helpers/cardclass.js'
+import { cardImages, otherImages  } from '../assets.js'
+import {Player, Deck, Hand, Card, Collection} from '../helpers/cardclass.js'
 
-const factions = ["archer", "mage", "rogue", "sorcerer", "templar"];
+const factions = ["archer", "mage", "rogue", "sorcerer", "templar"]
 
-// const showCards = (game, x, y, cards) => {
-//   for (let cardIndex = cards.length-1; cardIndex >= 0; cardIndex--) {
-//     // console.log(cards[cardIndex].phaserName);
-//     // console.assert(game.textures.exists(cards[cardIndex].phaserName), `Key ${cards[cardIndex].phaserName} should exist`);
-//     const cardBack = game.add.image(cardIndex * 20 + x, y, cards[cardIndex].phaserName);
-//     cardBack.setScale(0.25);
-//   }
-// }
+const showCards = (game, x, y, cards) => {
+  for (let cardIndex = cards.length-1; cardIndex >= 0; cardIndex--) {
+    // console.log(cards[cardIndex].phaserName);
+    // console.assert(game.textures.exists(cards[cardIndex].phaserName), `Key ${cards[cardIndex].phaserName} should exist`);
+    const cardBack = game.add.image(cardIndex * 20 + x, y, cards[cardIndex].phaserName);
+    cardBack.setScale(0.25);
+  }
+}
 
 const PhaserGame = () => {
   // Create a reference to the game container element
@@ -22,7 +21,6 @@ const PhaserGame = () => {
   useEffect(() => {
     // global game variables and constants;
     const deck = new Deck(factions, cardImages);
-    const discardPile = new Collection();
     let player = undefined; 
     let fpsMeter = '';
     let debug = '';
@@ -32,76 +30,98 @@ const PhaserGame = () => {
       this.load.image('cardBack', otherImages.cardBack);
       this.load.image('scoreboard', otherImages.scoreboard);
       
+      // const key = deck.cards[0];
+      // console.log(key.phaserName, key.image);
+      // this.load.image(key.phaserName,key.image);
+      // console.assert(this.textures.exists(key.phaserName), `Key ${key.phaserName} should exist`);
       for (let card of deck.cards) {
         this.load.image(card.phaserName.toString(), card.image)
         //console.log(cardphaserName, card.image)
       };
-      //if first player then...
-      player = new Player(deck, "opponent_name");
-      // then pass to other player otherwise wait for deck from ws
-      // WS(tooppenent, deck);
-      // else 
 
-      //  wait_to_recieve_deck and playername;
-      // OK, deck ready...
+      player = new Player(deck);
+      // console.log(Object.keys(otherImages))
+      // for (let image of Object.keys(otherImages)) {
+      //   const phaserName = image;
+      //   const phaserPath = otherImages[image];
+      //   console.log(phaserName, phaserPath);
+      //   this.load.image(phaserName, phaserPath)
+      // };
     };
 
 
     // main game loop    
     function create() {
       const game = this;
-      let debugText = '';
-      game.add.image(0, 0 , 'backdrop');
+      game.add.image(10,10, 'backdrop');
+      fpsMeter = game.add.text(20, 20, 'FPS: ' + fpsMeter, { font: '' });
 
       //basic tempalte for eventaul dynamic score counter  (NEW)
-      const scoreBoard = game.add.image(72, 250, 'scoreboard').setScale(SMALLCARDSCALE);
+      const scoreBoard = game.add.image(72, 250, 'scoreboard').setScale(0.25);
       const roundTracker = game.add.text(36, 203, 'Round ' + 5);
       const counter = game.add.text(33, 230, 14 + ' VS ' + 22);
 
       //placeholder for deck object
-      //const deckHolder = game.add.sprite(530, 300, 'cardBack').setScale(TINYCARDSCALE);
+      const deckHolder = game.add.sprite(530, 300, 'cardBack').setScale(0.16);
 
-      // boundary for discard pile
-        const discardArea = game.add.rectangle(530, 140, 95, 135, '0x522c2');
-        game.add.text(495, 130, 'DISCARD', {  fill: '#aaaaaa'});
-        
+      //placeholder for discard pile
+      const discardPile = game.add.rectangle(530, 140, 95, 135, '0xf5f5f5');
+      game.add.text(495, 130, 'DISCARD', {  fill: '#aaaaaa'});
+
+
+      debug = game.add.text(20, 40, 'Debug:', { font: '' });
+      // for (let card of deck.cards) {
+      //   const cardPhys = game.physics.add.image(Math.random() * 400, Math.random() * 300, card.phaserName);
+      //   cardPhys.setScale(0.2)
+      //   cardPhys.setVelocity(Math.random() * 200, Math.random() * 200);
+      //   cardPhys.setBounce(1, 1);
+      //   cardPhys.setCollideWorldBounds(true);
+      //   debug.setText(card.phaserName);
+      // }
       
-      // game.input.once('pointerup', () =>
-      // {
-      //   player.hand.unshowCards(game);
-      // });
+      // for (let card of deck.cards) {
+      //   const cardPhys = game.add.image(Math.random() * 400, Math.random() * 300, card.phaserName);
+      //   cardPhys.setScale(0.2);
+      //   debug.setText(card.phaserName);
+      // }
+
+
+      //showCards(this, 50, 50, player.hand.cards);
+
+
+      // const key = deck.cards[0];
+      // console.log(key.phaserName, key.image);
+      // console.assert(this.textures.exists(key.phaserName), `Key ${key.phaserName} should exist`);
+      // game.add.image(0, 20, key.phaserName);
+
+
+      //comment out to see board object placeholders
+      showCards(this, 100 ,100, deck.cards);
+      showCards(this, 100 ,200, player.hand.cards);
+      console.log("deck", deck.cards);
+      console.log("hand", player.hand.cards);
+
+
+
+      // game.add.image(0, 20, key.phaserName);
+        //console.log(typeof player.hand.cards[0].phaserName);
+        //game.add.image(0, 20, player.hand.cards[0].phaserName.toString();
+
+        // const key = player.hand.cards[0].phaserName;
+        // console.log(key);
+        // console.assert(this.textures.exists(key), `Texture key ${key} should exist`);
+      //(player.cards);
       
-      ///////////////////////////////////// BEGIN GAME LOOP //////////////////////////////////////
-      ///////////////////////////////////// BEGIN GAME LOOP //////////////////////////////////////
-      ///////////////////////////////////// BEGIN GAME LOOP //////////////////////////////////////
-      ///////////////////////////////////// BEGIN GAME LOOP //////////////////////////////////////
-
-      console.log("deck", deck.cards.show);
-      const gameState = new Gamestate(player, deck, discardPile)
-      
-      // loop: keep going until we get to 25
-      // ready to play our turn
-      // show our hand
-      // show opponents "hand" (actually just five cardbacks of our own hand);
-      // show the discard pile
-      // show deck
-      // show scoreboard (player: round, points, the names)
-      // endloop if done
-
-      ///////////////////////////////////// END GAME LOOP ////////////////////////////////////////
-      ///////////////////////////////////// END GAME LOOP ////////////////////////////////////////
-      ///////////////////////////////////// END GAME LOOP ////////////////////////////////////////
-      ///////////////////////////////////// END GAME LOOP ////////////////////////////////////////
-
-      fpsMeter = game.add.text(20, 20, 'FPS: ' + fpsMeter, { font: '' });
-      debug = game.add.text(20, 40, debugText, { font: '' });    
+      debug.setText(
+        `> Deck: ${deck.getCollection(true)} \n` +
+        `> ${player.hand.cards[0].phaserName} \n`
+      );
     };
     
     function update() { 
       const loopStatus = this.sys.game.loop;
       fpsMeter.setText("FPS :" + loopStatus.actualFps);  
       //debug.setText(debugBuffer);
-
     };
 
     function render() {
@@ -115,8 +135,8 @@ const PhaserGame = () => {
     new Phaser.Game({
       type: Phaser.AUTO, // Use the best rendering method available
       parent: gameContainerRef.current, // Attach the game canvas to the container element
-      width: 600, // Set the canvas width
-      height: 450, // Set the canvas height
+      width: 510, // Set the canvas width
+      height: 680, // Set the canvas height
       backgroundColor: '#000',
       physics: {
         default: 'arcade', 
