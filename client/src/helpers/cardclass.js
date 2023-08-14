@@ -1,5 +1,7 @@
 const SMALLCARDSCALE = 0.25;
 const TINYCARDSCALE = 0.16;
+const XRES = 600;
+const YRES = 800;
 
 const winnerTable = {
   "archer" : ["sorcerer", "rogue"],
@@ -198,16 +200,18 @@ class Collection {
   }
 
   showCards(game, x, y) {
-    this.unshowCards();
+    //this.unshowCards();
     let cardImage = undefined;
     if (this.currentCards === []) {
       return;
     } else {
       for (let cardIndex = this.currentCards.length-1; cardIndex >= 0; cardIndex--) {
         if (this.facedown) {
-          cardImage =  game.add.image(cardIndex * (this.stacked ? 2 : 20) + x, y, 'cardBack').setScale(this.currentScale);
+          cardImage =  game.add.image(cardIndex * (this.stacked ? 2 : 20) + x, y, 'cardBack')
+          cardImage.setScale(this.currentScale);
         } else {
-          cardImage =  game.add.image(cardIndex * (this.stacked ? 2 : 20) + x, y, this.currentCards[cardIndex].phaserName).setScale(this.currentScale);
+          cardImage = game.add.image(cardIndex * (this.stacked ? 2 : 20) + x, y, this.currentCards[cardIndex].phaserName);
+          cardImage.setScale(this.currentScale);
         }
         this.cardStack.push(cardImage);
       }
@@ -265,5 +269,7 @@ module.exports = {
   Collection,
   Gamestate,
   SMALLCARDSCALE, 
-  TINYCARDSCALE
+  TINYCARDSCALE,
+  XRES,
+  YRES
 }
