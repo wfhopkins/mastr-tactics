@@ -37,7 +37,8 @@ const otherImages = {
   letterhead : require ('./images/letterhead.png'),
   backdrop : require('./images/wooden-backdrop.png'),
   chatSign : require('./images/chat.png'),
-  scoreboard : require('./images/MASTR-scoreboard-no-text.png')
+  scoreboard : require('./images/MASTR-scoreboard-no-text.png'),
+  playSign : require('./images/play.png'),
 };
 
 export { cardImages, otherImages };

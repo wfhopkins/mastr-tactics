@@ -62,11 +62,11 @@ io.on('connection', client => {
   const session = client.request.session; // Access session information from the client's request
   const name = session && session.user && session.user.name; // Get the user's name from the session, if available
   console.log("Client Connected!", name, " : ", client.id);
-  client.emit("system", `Welcome ${name}`); // Emit a welcome message to the connected client
-  client.broadcast.emit('system', `${name} has just joined`); // Broadcast a message to all other clients
+  //client.emit("system", `Welcome ${name}`); // Emit a welcome message to the connected client
+  //client.broadcast.emit('system', `${name} has just joined`); // Broadcast a message to all other clients
 
   clients[name] = client.id; // Add the client's ID to the clients object for tracking
-  console.log(clients);
+  console.log('these are the websocket client: ' ,clients);
 
   // Handle incoming messages
   client.on('privateMessage', (message) => {
@@ -81,12 +81,12 @@ io.on('connection', client => {
   client.on('readyToPlay', () => {
 
     console.log('Ready to play event received');
-
     if (!readyPlayers.includes(name)) {
       readyPlayers.push(name);
-
+      
       if (readyPlayers.length === 1) {
         io.to(clients[name]).emit('waitingForOpponent');
+        console.log(readyPlayers);
         console.log("just sent waitingForOpponent to front end" , name);
       } else if (readyPlayers.length === 2) {
         const player1 = readyPlayers[0];
@@ -102,10 +102,12 @@ io.on('connection', client => {
     }
   });
 
+ 
+
   // Handle client disconnection
   client.on("disconnect", () => {
-    console.log("Client Disconnected", name, " : ", client.id);
-    client.broadcast.emit('system', `${name} has just left`); // Notify other clients when a user disconnects
+    console.log("WebSocket Client Disconnected", name, " : ", client.id);
+    //client.broadcast.emit('system', `${name} has just left`); // Notify other clients when a user disconnects
     delete clients[name]; // Remove the client's ID from the clients object
   });
 });

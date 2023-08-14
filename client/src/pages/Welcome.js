@@ -15,7 +15,7 @@ import { otherImages } from '../assets';
 
 
 const Welcome = ({ auth, logout, socket }) => {
-  //These are the state variables for managing component visibility
+  //These are the state variables for managing component visibility and game event state
   const [isPaneOpen, setIsPaneOpen] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
   const [isLoreVisible, setIsLoreVisible] = useState(false);
@@ -27,9 +27,29 @@ const Welcome = ({ auth, logout, socket }) => {
   const [gameStarted, setGameStarted] = useState(false);
   const [isLoad, setLoad] = useState(true); // This is how you won't have a very quick rendering of the other components
 
-  console.log("Socket prop:", socket);
 
 
+  //=============================Below is for Game Stuff ========================>
+  // UseEffect to handle waiting for opponent and game start events
+  useEffect(() => {
+    socket.on('waitingForOpponent', () => {
+      console.log("Front end receiving waiting for opponent")
+      setIsWaitingForOpponent(true);
+    });
+    
+    socket.on('gameStart', (opponent) => {
+      setIsWaitingForOpponent(false);
+      setOpponentName(opponent); // Store opponent's name
+      setGameStarted(true); // Indicate that the game has started
+    });
+    
+    return () => {
+      socket.off('waitingForOpponent');
+      socket.off('gameStart');
+      
+    };
+  }, [socket]);
+  
   const handleReadyToPlay = () => {
     console.log("Ready to play button clicked");
     socket.emit('readyToPlay', auth.name); // Send "ready to play" message to backend
@@ -39,27 +59,7 @@ const Welcome = ({ auth, logout, socket }) => {
     setIsRulesVisible(false);
     setIsCardsVisible(false);
   };
-
-  useEffect(() => {
-    socket.on('waitingForOpponent', () => {
-      console.log("Front end receiving waiting for opponent")
-      setIsWaitingForOpponent(true);
-    });
-
-    socket.on('gameStart', (opponent) => {
-      setIsWaitingForOpponent(false);
-      setOpponentName(opponent); // Store opponent's name
-      setGameStarted(true); // Indicate that the game has started
-    });
-
-    return () => {
-      socket.off('waitingForOpponent');
-      socket.off('gameStart');
-
-    };
-  }, [socket]);
-
-
+   //=============================Below is for the sliding pane ========================>
 
   const openSlidingPane = () => {
     setIsPaneOpen(true);
@@ -68,26 +68,34 @@ const Welcome = ({ auth, logout, socket }) => {
   const closeSlidingPane = () => {
     setIsPaneOpen(false);
   };
-  const handleModalOpen = () => {
-    setModalOpen(true);
-  };
+ 
+   //=============================Below is for Modal ========================>
 
   const handleModalClose = () => {
+    if (gameStarted && opponentName) {
+      const quitMessage = {
+        text: "( Opponent Quit",
+        to: opponentName,
+      };
+      socket.emit('privateMessage', quitMessage);
+    }
     setModalOpen(false);
   };
+  
+  //=============================Below are the NavBar Buttons========================>
 
   const handleLoreButtonClick = () => {
-    setIsLoreVisible(!isLoreVisible);
+    setIsLoreVisible(!isLoreVisible); // Toggle isVisible state
     setIsAboutVisible(false); // Close the About component if open
     setIsRulesVisible(false); // Close the Rules component if open
-    setIsCardsVisible(false);
+    setIsCardsVisible(false); // Close the Cards component if open
     setLoad(false);
   };
 
   const handleAboutButtonClick = () => {
     setIsAboutVisible(!isAboutVisible);
-    setIsLoreVisible(false); // Close the Lore component if open
-    setIsRulesVisible(false); // Close the Rules if open
+    setIsLoreVisible(false); 
+    setIsRulesVisible(false); 
     setIsCardsVisible(false);
     setLoad(false);
   };
@@ -121,8 +129,9 @@ const Welcome = ({ auth, logout, socket }) => {
         <NavBar auth={auth} logout={logout} onLeaderboardButtonClick={openSlidingPane} onLogoButtonClick={handleComponentClose} onCardsButtonClick={handleCardsButtonClick} onLoreButtonClick={handleLoreButtonClick} onAboutButtonClick={handleAboutButtonClick} onRulesButtonClick={handleRulesButtonClick} />
 
         <button className="nav-button-chat" onClick={handleReadyToPlay}>
-          <img className="chat-logo" src={otherImages.chatSign} alt="Play" />
+          <img className="chat-logo" src={otherImages.playSign} alt="Play" />
         </button>
+
         <div className={`rules-container ${isLoad ? 'pre-load' : ''} ${isRulesVisible ? 'slide-down' : 'fade-out'}`}>
           <Rules onClose={handleComponentClose} />
         </div>
@@ -139,7 +148,7 @@ const Welcome = ({ auth, logout, socket }) => {
           <Cards onClose={handleComponentClose} />
         </div>
 
-        <GameModal isOpen={modalOpen} onClose={() => setModalOpen(false)}>
+        <GameModal isOpen={modalOpen} onClose={handleModalClose}>
           {isWaitingForOpponent ? (
             <p>Waiting for opponent...</p>
           ) : (
