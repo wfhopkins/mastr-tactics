@@ -1,5 +1,6 @@
 const { Server } = require('socket.io');
 const express = require('express');
+const cors = require('cors');
 // import { Player, Deck, Hand, Card, Collection } from 'cardgame-class'
 
 // Enable Cookie Sessions
@@ -8,6 +9,10 @@ const session = cookieSession({ name: 'session', keys: ["secret"], sameSite: tru
 
 // Create Express App
 const app = express();
+app.use(cors({
+  origin: 'http://localhost:3000',
+  credentials: true,
+}));
 app.use(express.static("public")); // Serve static files from the "public" directory
 app.use(express.json()); // Enable JSON parsing
 app.use(session); // Use the session middleware to enable cookie-based sessions
@@ -39,9 +44,15 @@ const http = app.listen(8080, () => {
 });
 
 // Start WebSocket (WS) Server using socket.io
-const io = new Server(http); // Create a new socket.io server instance
+const io = new Server(http, {
+  cors: {
+    origin: 'http://localhost:3000', // Allow requests from your React client
+    methods: ['GET', 'POST'],
+    credentials: true,
+  }
+}); // Create a new socket.io server instance
 const clients = {}; // Object to store connected clients
-
+const readyPlayers = []; // Array to store players who click play
 // Allow socket.io to access session information
 const wrap = middleware => (socket, next) => middleware(socket.request, {}, next);
 io.use(wrap(session));
@@ -49,10 +60,7 @@ io.use(wrap(session));
 // Handle WebSocket connections
 io.on('connection', client => {
   const session = client.request.session; // Access session information from the client's request
-  //const name = session?.user?.name; // Get the user's name from the session, if available
   const name = session && session.user && session.user.name; // Get the user's name from the session, if available
-
-
   console.log("Client Connected!", name, " : ", client.id);
   client.emit("system", `Welcome ${name}`); // Emit a welcome message to the connected client
   client.broadcast.emit('system', `${name} has just joined`); // Broadcast a message to all other clients
@@ -61,19 +69,37 @@ io.on('connection', client => {
   console.log(clients);
 
   // Handle incoming messages
-  client.on('message', data => {
-    console.log(data);
-    const { text, to } = data;
-    const from = name;
+  client.on('privateMessage', (message) => {
+    const { text, from, to } = message;
+    const recipientId = clients[to];
 
-    if (!to) {
-      client.broadcast.emit('public', { text, from }); // Broadcast public messages to all clients
-      return;
+    if (recipientId) {
+      io.to(recipientId).emit('privateMessage', { text, from });
     }
+  });
 
-    const id = clients[to];
-    console.log(`Sending message to ${to}:${id}`);
-    io.to(id).emit("private", { text, from }); // Send private messages to specific client
+  client.on('readyToPlay', () => {
+
+    console.log('Ready to play event received');
+
+    if (!readyPlayers.includes(name)) {
+      readyPlayers.push(name);
+
+      if (readyPlayers.length === 1) {
+        io.to(clients[name]).emit('waitingForOpponent');
+        console.log("just sent waitingForOpponent to front end" , name);
+      } else if (readyPlayers.length === 2) {
+        const player1 = readyPlayers[0];
+        const player2 = readyPlayers[1];
+
+        console.log('game begginning between ',player1 + ' and ' , player2);
+
+        io.to(clients[player1]).emit('gameStart', player2); // Send opponent's name
+        io.to(clients[player2]).emit('gameStart', player1); // Send opponent's name
+
+        readyPlayers.splice(0, 2); // Remove the players who started the game
+      }
+    }
   });
 
   // Handle client disconnection

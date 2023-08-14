@@ -1,100 +1,48 @@
-import { useEffect, useState } from 'react';
-import io from 'socket.io-client';
-import useSound from 'use-sound';
-import sound from '../sounds/notify.mp3';
+import React, { useState, useEffect } from 'react';
 
-// Define the Chat component
-const Chat = function(props) {
-  // Initialize sound effect
-  const [play] = useSound(sound, { volume: 0.75 });
-
-  // State to manage messages, socket connection, text input, and recipient
+const Chat = ({ socket, currentUser, opponent }) => {
   const [messages, setMessages] = useState([]);
-  const [socket, setSocket] = useState();
-  const [text, setText] = useState("");
-  const [to, setTo] = useState("");
+  const [messageInput, setMessageInput] = useState('');
 
-  // Set up socket connection and handle events
-  useEffect(() => {
-    // Create a new socket connection
-    const socket = io();
-    setSocket(socket);
-
-    // Handle connection event
-    socket.on('connect', () => {
-      // Uncomment the next line for debugging
-      // console.log("Connected.");
-    });
-
-    // Handle system messages
-    socket.on("system", data => {
-      // Uncomment the next lines for debugging
-      // console.log(data);
-      setMessages(prev => [data, ...prev]);
-    });
-
-    // Handle public messages
-    socket.on("public", data => {
-      const message = `${data.from} says: ${data.text}`;
-      setMessages(prev => [message, ...prev]);
-      // Uncomment the next line for debugging
-      // console.log(data);
-    });
-
-    // Handle private messages
-    socket.on("private", data => {
-      // Play notification sound
-      play();
-
-      const message = `${data.from} says: ${data.text}`;
-      setMessages(prev => [message, ...prev]);
-      // Uncomment the next line for debugging
-      // console.log(data);
-    });
-
-    // Clean up socket connection to prevent memory leaks
-    return () => socket.disconnect();
-  }, [play]);
-
-  // Send a message via the socket
-  const send = function() {
-    socket.emit("message", { text, to });
+  const handleSendMessage = () => {
+    if (messageInput.trim() !== '') {
+      const newMessage = {
+        text: messageInput,
+        from: currentUser,
+        to: opponent,
+      };
+      socket.emit('privateMessage', newMessage);
+      setMessageInput('');
+    }
   };
 
-  // Generate a list of messages as list items
-  const list = messages.map((msg, i) => {
-    return <li key={i}>{msg}</li>;
-  });
+  useEffect(() => {
+    socket.on('privateMessage', (message) => {
+      setMessages((prevMessages) => [...prevMessages, message]);
+    });
+  }, [socket]);
 
-  // Render the Chat component
   return (
-    <>
-      {/* Input for selecting recipient */}
-      <div>
+    <div className="chat-container">
+      <div className="chat-messages">
+        {messages.map((message, index) => (
+          <div key={index} className="chat-message">
+            <span className="chat-message-from">{message.from}:</span>
+            <span className="chat-message-text">{message.text}</span>
+          </div>
+        ))}
+      </div>
+      <div className="chat-input">
         <input
-          onChange={event => setTo(event.target.value)}
-          value={to}
-          placeholder="Recipient" />
+          type="text"
+          placeholder="Type your message..."
+          value={messageInput}
+          onChange={(e) => setMessageInput(e.target.value)}
+        />
+        <button onClick={handleSendMessage}>Send</button>
       </div>
-
-      {/* Textarea for composing messages */}
-      <div>
-        <textarea
-          onChange={e => setText(e.target.value)}
-          placeholder="Type a message" />
-      </div>
-
-      {/* Send and clear buttons */}
-      <button onClick={send}>Send</button>
-      <button onClick={() => setMessages([])}>Clear</button>
-
-      {/* List of messages */}
-      <ul>
-        {list}
-      </ul>
-    </>
+    </div>
   );
 };
 
-// Export the Chat component as the default export
 export default Chat;

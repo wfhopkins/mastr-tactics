@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { cardImages, otherImages  } from '../assets.js'
+import { otherImages  } from '../assets.js'
 import '../styles/Login.css';
 
 
