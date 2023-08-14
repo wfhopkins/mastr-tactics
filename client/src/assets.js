@@ -40,6 +40,8 @@ const otherImages = {
   scoreboard : require('./images/MASTR-scoreboard-no-text.png'),
   playSign : require('./images/play.png'),
   welcomeImage : require('./images/welcome-image.png'),
+  leaderboard : require('./images/leaderboard.png'),
+  leaderboadImage : require('./images/leaderBoard-false.png'),
 };
 
 export { cardImages, otherImages };
