@@ -130,6 +130,28 @@ div p:not(:first-child)::first-letter {
   width: 60%
 }
 
+.welcome-image {
+  position: absolute;
+  top: 45%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 2rem 0; /* Adjust margin as needed */
+  max-width: 80%; /* Limit the width to fit the screen */
+  max-height: 70vh; /* Adjust the height as needed */
+  z-index: -2;
+}
+
+.welcome-image img {
+  width: auto;
+  height: 100%;
+  max-width: 100%;
+  max-height: 100%;
+}
+
+
 /* Increase size and move image to the left */
 #rulesImage {
   text-align: center; /* Align the image to the left */

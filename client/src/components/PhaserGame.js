@@ -151,8 +151,8 @@ const PhaserGame = () => {
     new Phaser.Game({
       type: Phaser.AUTO, // Use the best rendering method available
       parent: gameContainerRef.current, // Attach the game canvas to the container element
-      width: XRES, // Set the canvas width
-      height: YRES, // Set the canvas height
+      width: 510, // Set the canvas width
+      height: 680, // Set the canvas height
       backgroundColor: '#000',
       physics: {
         default: 'arcade', 
@@ -186,8 +186,3 @@ const PhaserGame = () => {
 };
 
 export default PhaserGame;
-
-
-
-
-

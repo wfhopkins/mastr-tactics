@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import '../styles/Chat.css';
 
 const Chat = ({ socket, currentUser, opponent }) => {
   const [messages, setMessages] = useState([]);
@@ -24,6 +25,20 @@ const Chat = ({ socket, currentUser, opponent }) => {
 
   return (
     <div className="chat-container">
+      
+      
+      <div className="chat-input">
+        <input
+          type="text"
+          placeholder="Type your message..."
+          value={messageInput}
+          onChange={(e) => setMessageInput(e.target.value)}
+          className="chat-input-field"
+        />
+        <button onClick={handleSendMessage} className="chat-button">Send</button>
+      </div>
+
+      
       <div className="chat-messages">
         {messages.map((message, index) => (
           <div key={index} className="chat-message">
@@ -31,17 +46,11 @@ const Chat = ({ socket, currentUser, opponent }) => {
             <span className="chat-message-text">{message.text}</span>
           </div>
         ))}
-      </div>
-      <div className="chat-input">
-        <input
-          type="text"
-          placeholder="Type your message..."
-          value={messageInput}
-          onChange={(e) => setMessageInput(e.target.value)}
-        />
-        <button onClick={handleSendMessage}>Send</button>
+      
       </div>
     </div>
+
+    
   );
 };
 

@@ -1,8 +1,9 @@
 .login-container {
   position: relative;
   background-image: url('../images/login-page-image.png');
-  background-size: cover;
+  background-size: contain;
   background-position: center;
+  background-repeat: no-repeat;
   min-height: 100vh;
 }
 
