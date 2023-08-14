@@ -41,6 +41,8 @@ const Welcome = ({ auth, logout, socket }) => {
       setIsWaitingForOpponent(false);
       setOpponentName(opponent); // Store opponent's name
       setGameStarted(true); // Indicate that the game has started
+      console.log('received the gamestart message ' , gameStarted )
+      
     });
     
     return () => {
@@ -49,6 +51,10 @@ const Welcome = ({ auth, logout, socket }) => {
       
     };
   }, [socket]);
+
+  useEffect(() => {
+    console.log('received the gamestart message', gameStarted);
+  }, [gameStarted]);
   
   const handleReadyToPlay = () => {
     console.log("Ready to play button clicked");
@@ -132,6 +138,8 @@ const Welcome = ({ auth, logout, socket }) => {
           <img className="chat-logo" src={otherImages.playSign} alt="Play" />
         </button>
 
+        <img className="welcome-image" src={otherImages.welcomeImage} alt="welcome"/>
+
         <div className={`rules-container ${isLoad ? 'pre-load' : ''} ${isRulesVisible ? 'slide-down' : 'fade-out'}`}>
           <Rules onClose={handleComponentClose} />
         </div>
@@ -156,6 +164,7 @@ const Welcome = ({ auth, logout, socket }) => {
               <PhaserGame />
               <Chat socket={socket} currentUser={auth.name} opponent={opponentName} />
             </div>
+            
           )}
         </GameModal>
 

@@ -39,6 +39,7 @@ const otherImages = {
   chatSign : require('./images/chat.png'),
   scoreboard : require('./images/MASTR-scoreboard-no-text.png'),
   playSign : require('./images/play.png'),
+  welcomeImage : require('./images/welcome-image.png'),
 };
 
 export { cardImages, otherImages };
