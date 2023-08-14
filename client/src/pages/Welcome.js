@@ -163,7 +163,9 @@ const Welcome = ({ auth, logout, socket }) => {
       <GameModal isOpen={modalOpen} onClose={handleModalClose}>
         <div>
           {(isWaitingForOpponent === true || isWaitingForOpponent === null) && (
-            <p>Waiting for opponent...</p>
+            <p className="waiting-message">
+              <span>W</span>aiting for opponent...
+            </p>
           )}
           {isWaitingForOpponent === false && (
             <div>
