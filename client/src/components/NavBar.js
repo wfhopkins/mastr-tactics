@@ -15,7 +15,7 @@ const NavBar = ({ auth, logout, onLoreButtonClick, onAboutButtonClick, onRulesBu
         
        
         <button className="nav-button" onClick={onLoreButtonClick}>Lore</button> 
-        <button className="nav-button" onClick={onLeaderboardButtonClick}>Leaderboard</button>
+        <button className="nav-button" onClick={logout}>Logout</button>
         {/* <button className="nav-button" onClick={logout}>Logout</button> */}
         {/* Display user information and logout button */}
         {/* {auth && (
