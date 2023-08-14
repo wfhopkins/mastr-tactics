@@ -22,7 +22,7 @@ const Welcome = ({ auth, logout, socket }) => {
   const [isAboutVisible, setIsAboutVisible] = useState(false);
   const [isRulesVisible, setIsRulesVisible] = useState(false);
   const [isCardsVisible, setIsCardsVisible] = useState(false);
-  const [isWaitingForOpponent, setIsWaitingForOpponent] = useState(false);
+  const [isWaitingForOpponent, setIsWaitingForOpponent] = useState(null);
   const [opponentName, setOpponentName] = useState('');
   const [gameStarted, setGameStarted] = useState(false);
   const [isLoad, setLoad] = useState(true); // This is how you won't have a very quick rendering of the other components
@@ -36,26 +36,26 @@ const Welcome = ({ auth, logout, socket }) => {
       console.log("Front end receiving waiting for opponent")
       setIsWaitingForOpponent(true);
     });
-    
+
     socket.on('gameStart', (opponent) => {
       setIsWaitingForOpponent(false);
       setOpponentName(opponent); // Store opponent's name
       setGameStarted(true); // Indicate that the game has started
-      console.log('received the gamestart message ' , gameStarted )
-      
+      console.log('received the gamestart message ', gameStarted)
+
     });
-    
+
     return () => {
       socket.off('waitingForOpponent');
       socket.off('gameStart');
-      
+
     };
   }, [socket]);
 
   useEffect(() => {
     console.log('received the gamestart message', gameStarted);
   }, [gameStarted]);
-  
+
   const handleReadyToPlay = () => {
     console.log("Ready to play button clicked");
     socket.emit('readyToPlay', auth.name); // Send "ready to play" message to backend
@@ -65,7 +65,7 @@ const Welcome = ({ auth, logout, socket }) => {
     setIsRulesVisible(false);
     setIsCardsVisible(false);
   };
-   //=============================Below is for the sliding pane ========================>
+  //=============================Below is for the sliding pane ========================>
 
   const openSlidingPane = () => {
     setIsPaneOpen(true);
@@ -74,8 +74,8 @@ const Welcome = ({ auth, logout, socket }) => {
   const closeSlidingPane = () => {
     setIsPaneOpen(false);
   };
- 
-   //=============================Below is for Modal ========================>
+
+  //=============================Below is for Modal ========================>
 
   const handleModalClose = () => {
     if (gameStarted && opponentName) {
@@ -87,7 +87,7 @@ const Welcome = ({ auth, logout, socket }) => {
     }
     setModalOpen(false);
   };
-  
+
   //=============================Below are the NavBar Buttons========================>
 
   const handleLoreButtonClick = () => {
@@ -100,8 +100,8 @@ const Welcome = ({ auth, logout, socket }) => {
 
   const handleAboutButtonClick = () => {
     setIsAboutVisible(!isAboutVisible);
-    setIsLoreVisible(false); 
-    setIsRulesVisible(false); 
+    setIsLoreVisible(false);
+    setIsRulesVisible(false);
     setIsCardsVisible(false);
     setLoad(false);
   };
@@ -130,62 +130,60 @@ const Welcome = ({ auth, logout, socket }) => {
   };
 
   return (
-    
-      <div className="welcome-container">
-        <NavBar auth={auth} logout={logout} onLeaderboardButtonClick={openSlidingPane} onLogoButtonClick={handleComponentClose} onCardsButtonClick={handleCardsButtonClick} onLoreButtonClick={handleLoreButtonClick} onAboutButtonClick={handleAboutButtonClick} onRulesButtonClick={handleRulesButtonClick} />
 
-        <button className="nav-button-play" onClick={handleReadyToPlay}>
-          <img className="chat-logo" src={otherImages.playSign} alt="Play" />
-        </button>
+    <div className="welcome-container">
+      <NavBar auth={auth} logout={logout} onLeaderboardButtonClick={openSlidingPane} onLogoButtonClick={handleComponentClose} onCardsButtonClick={handleCardsButtonClick} onLoreButtonClick={handleLoreButtonClick} onAboutButtonClick={handleAboutButtonClick} onRulesButtonClick={handleRulesButtonClick} />
 
-        <button className="nav-button-leader" onClick={openSlidingPane}>
-          <img className="leader-logo" src={otherImages.leaderboard} alt="Leaderboard" />
-        </button>
+      <button className="nav-button-play" onClick={handleReadyToPlay}>
+        <img className="chat-logo" src={otherImages.playSign} alt="Play" />
+      </button>
 
-        <img className="welcome-image" src={otherImages.welcomeImage} alt="welcome"/>
+      <button className="nav-button-leader" onClick={openSlidingPane}>
+        <img className="leader-logo" src={otherImages.leaderboard} alt="Leaderboard" />
+      </button>
 
-        <div className={`rules-container ${isLoad ? 'pre-load' : ''} ${isRulesVisible ? 'slide-down' : 'fade-out'}`}>
-          <Rules onClose={handleComponentClose} />
-        </div>
+      <img className="welcome-image" src={otherImages.welcomeImage} alt="welcome" />
 
-        <div className={`lore-container ${isLoad ? 'pre-load' : ''} ${isLoreVisible ? 'slide-down' : 'fade-out'}`}>
-          <Lore onClose={handleComponentClose} />
-        </div>
+      <div className={`rules-container ${isLoad ? 'pre-load' : ''} ${isRulesVisible ? 'slide-down' : 'fade-out'}`}>
+        <Rules onClose={handleComponentClose} />
+      </div>
 
-        <div className={`about-container ${isLoad ? 'pre-load' : ''} ${isAboutVisible ? 'slide-down' : 'fade-out'}`}>
-          <About onClose={handleComponentClose} />
-        </div>
+      <div className={`lore-container ${isLoad ? 'pre-load' : ''} ${isLoreVisible ? 'slide-down' : 'fade-out'}`}>
+        <Lore onClose={handleComponentClose} />
+      </div>
 
-        <div className={`cards-container ${isLoad ? 'pre-load' : ''} ${isCardsVisible ? 'slide-down' : 'fade-out'}`}>
-          <Cards onClose={handleComponentClose} />
-        </div>
+      <div className={`about-container ${isLoad ? 'pre-load' : ''} ${isAboutVisible ? 'slide-down' : 'fade-out'}`}>
+        <About onClose={handleComponentClose} />
+      </div>
 
-        <GameModal isOpen={modalOpen} onClose={handleModalClose}>
-          {isWaitingForOpponent ? (
+      <div className={`cards-container ${isLoad ? 'pre-load' : ''} ${isCardsVisible ? 'slide-down' : 'fade-out'}`}>
+        <Cards onClose={handleComponentClose} />
+      </div>
+
+      <GameModal isOpen={modalOpen} onClose={handleModalClose}>
+        <div>
+          {(isWaitingForOpponent === true || isWaitingForOpponent === null) && (
             <p>Waiting for opponent...</p>
-          ) : (
+          )}
+          {isWaitingForOpponent === false && (
             <div>
               <PhaserGame />
               <Chat socket={socket} currentUser={auth.name} opponent={opponentName} />
             </div>
-            
           )}
-        </GameModal>
+        </div>
+      </GameModal>
 
-        <SlidingPane
-          isOpen={isPaneOpen}
-          title="Leaderboard Update"
-          onRequestClose={closeSlidingPane}
-          from="right"
-          style={{
-            background: 'linear-gradient(to right, #ff6b6b, #4ecdc4)',
-            color: 'white',
-          }}
-        >
-          {/* Content of the sliding pane */}
-          <img className="leaderBoardImg" src={otherImages.leaderboadImage} alt="Leaderboard" />
-        </SlidingPane>
-      </div>
+      <SlidingPane
+        isOpen={isPaneOpen}
+        title="Leaderboard Update"
+        onRequestClose={closeSlidingPane}
+        from="right"
+      >
+        {/* Content of the sliding pane */}
+        <img className="leaderBoardImg" src={otherImages.leaderboadImage} alt="Leaderboard" />
+      </SlidingPane>
+    </div>
 
 
   );
