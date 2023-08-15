@@ -169,7 +169,7 @@ const Welcome = ({ auth, logout, socket }) => {
           )}
           {isWaitingForOpponent === false && (
             <div>
-              <PhaserGame />
+              <PhaserGame socket={socket} />
               <Chat socket={socket} currentUser={auth.name} opponent={opponentName} />
             </div>
           )}

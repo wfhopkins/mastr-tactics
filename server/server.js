@@ -101,10 +101,14 @@ io.on('connection', client => {
     }
 
     client.on('playACArd', () => {
-      console.log("Card Played", Card)
+      console.log("Card Played", cardSprite)
     })
 
   });
+
+  client.on('gameTest', () => {
+    console.log("Phaser is talking to Server");
+  })
 
  
 
