@@ -18,43 +18,50 @@ import {
 
 const factions = ["archer", "mage", "rogue", "sorcerer", "templar"];
 
-// const showCards = (game, x, y, cards) => {
-//   for (let cardIndex = cards.length-1; cardIndex >= 0; cardIndex--) {
-//     // console.log(cards[cardIndex].phaserName);
-//     // console.assert(game.textures.exists(cards[cardIndex].phaserName), `Key ${cards[cardIndex].phaserName} should exist`);
-//     const cardBack = game.add.image(cardIndex * 20 + x, y, cards[cardIndex].phaserName);
-//     cardBack.setScale(0.25);
-//   }
-// }
-
 const PhaserGame = ( {socket} ) => {
   // Create a reference to the game container element
   const gameContainerRef = useRef(null);
   // all game runtime code inside useEffect..
   useEffect(() => {
-    // global game variables and constants;
-    const deck = new Deck(factions, cardImages);
-    const discardPile = new Collection();
+
+  //   socket.on('privateMessage', (message) => {
+  //     setMessages((prevMessages) => [...prevMessages, message]);
+  //   });
+  // }, [socket]);
+
+    //debugging tools...
+    let fpsMeter = '';
+    let debug = '';
+
+    //create game objects..
+    let deck = undefined;
+    let discardPile = undefined;
+    let opponentHand = undefined;
     let player = undefined;
-    let fpsMeter = "";
-    let debug = "";
-    // any preloaded assets should be here.
-    function preload() {
-      this.load.image("backdrop", otherImages.backdrop);
+    
+    
+    function preload() {  
+      // define 'this' alias..
+      const game = this;
 
-      // this.load.image('backdrop', otherImages.backdrop).displayWidth = 600;
-      // this.load.image('backdrop', otherImages.backdrop).displayHeight = 800;
 
-      this.load.image("cardBack", otherImages.cardBack);
-      this.load.image("scoreboard", otherImages.scoreboard);
-
-      for (let card of deck.cards) {
-        this.load.image(card.phaserName.toString(), card.image);
-        //console.log(cardphaserName, card.image)
-      }
+      //register images assets inside phaser...
+      game.load.image('backdrop', otherImages.backdrop);
+      game.load.image('cardBack', otherImages.cardBack)
+      game.load.image('scoreboard', otherImages.scoreboard);
+      
+      for (let card in cardImages) {
+        game.load.image(card, cardImages[card])
+        //console.log(card, cardImages[card])
+      };
+      
+      //define game objects...
+      opponentHand  = new Hand      (game, 64, 100, TINYCARDSCALE, [] );
+      discardPile   = new Collection(game, 64, 300, SMALLCARDSCALE, [] );
+      deck          = new Deck      (game, 64, 500, SMALLCARDSCALE, factions, cardImages);
+      player        = new Player    (game, XRES / 2 - 30, YRES - 120, TINYCARDSCALE, deck);
+      
       //if first player then...
-      player = new Player(deck, "opponent_name");
-      player.hand.scale = TINYCARDSCALE;
       // then pass to other player otherwise wait for deck from ws
       // WS(tooppenent, deck);
       // else
@@ -65,6 +72,7 @@ const PhaserGame = ( {socket} ) => {
 
     // main game loop
     function create() {
+      // define 'this' alias..
       const game = this;
       let debugText = "";
       game.add.image(XRES / 2, YRES / 2, "backdrop").setDisplaySize(XRES, YRES);
@@ -93,62 +101,64 @@ const PhaserGame = ( {socket} ) => {
         14 + " VS " + 22
       );
 
-      // //basic tempalte for eventaul dynamic score counter  (NEW)
-      // const scoreBoard = game.add.image(72, 250, 'scoreboard').setScale(SMALLCARDSCALE);
-      // const roundTracker = game.add.text(36, 203, 'Round ' + 5);
-      // const counter = game.add.text(33, 230, 14 + ' VS ' + 22);
+      discardPile.hidden = false;
 
-      //placeholder for deck object
-      //const deckHolder = game.add.sprite(530, 300, 'cardBack').setScale(TINYCARDSCALE);
+      // fill the oppoenents hand with dummy cards, set their scale, and flip them face down
+      for (let count = 0; count < 5; count++) {
+        opponentHand.receiveCard(new Card(game, 0, 0, 'dummy', 1, count, 'cardBack'));
+      }
+      //opponentHand.facedown = true;
+      opponentHand.showCards();
 
-      // boundary for the discard pile
-      const discardArea = game.add.rectangle(
-        530,
-        YRES / 2 - 150,
-        95,
-        135,
-        "0x522c2"
-      );
-      game.add.text(495, YRES / 2 - 150, "DISCARD", { fill: "#aaaaaa" });
-
-      // game.input.once('pointerup', () =>
-      // {
+      // boundary for discard pile
+      const discardArea = game.add.rectangle(530, YRES / 2 - 150, 95, 135, '0x522c2');
+      game.add.text(495, YRES / 2 - 150, 'DISCARD', {  fill: '#aaaaaa'});
+        
+      
+      // game.input.once('pointerup', () => {
       //   player.hand.unshowCards(game);
-      // });      
+      // });
+        
+
+      //discardPile.receiveCard(player.hand.giveRandomCard());
+      deck.receiveCard(player.hand.giveRandomCard());
+
+
+
+      //deck.showCards();
+      discardPile.showCards();
+      player.hand.showCards();
+
 
       ///////////////////////////////////// BEGIN GAME LOOP //////////////////////////////////////
       ///////////////////////////////////// BEGIN GAME LOOP //////////////////////////////////////
       ///////////////////////////////////// BEGIN GAME LOOP //////////////////////////////////////
       ///////////////////////////////////// BEGIN GAME LOOP //////////////////////////////////////
 
-      console.log("deck", deck.cards.show);
-      const gameState = new Gamestate(player, deck, discardPile);
-
+      // console.log("deck", deck.cards.show);
+      // const gameState = new Gamestate(player, deck, discardPile)
+      
       // loop: keep going until we get to 25
 
       // ready to play our turn
+      
+      // show our hand
+      
+      
+     
 
-      // show opponents hand
-      const opponentHand = new Collection();
-      for (let count = 0; count < 5; count++) {
-        opponentHand.receiveCard(new Card("dummy", 1, count, "cardBack"));
-      }
-      opponentHand.scale = TINYCARDSCALE;
-      opponentHand.facedown = true;
-
-
-      // how the players hand
-      gameState.player.hand.showCards(game, XRES / 2 - 120, YRES - 100);
-      opponentHand.showCards(game, XRES / 2 - 120, YRES - 700);
+      // opponentHand.showCards(game, XRES / 2 - 30, YRES - 660);
+      
+      //cardSprite.on('pointerup', cardSprite.unshowCards , game);
 
       //show opponents "hand" (actually just five cardbacks of our own hand);
 
   
       // show deck
-      deck.facedown = true;
-      deck.stacked = true;
-      deck.scale = TINYCARDSCALE;
-      deck.showCards(game, 510, YRES / 2 + 150);
+      // deck.facedown = true;
+      // deck.stacked = true;
+      // deck.scale = SMALLCARDSCALE;
+      // deck.showCards(game, 510, YRES / 2 + 150);
 
       ////////////////////////THIS IS WHERE WE ARE TESTING////////////////////////////////
 
@@ -178,47 +188,47 @@ const PhaserGame = ( {socket} ) => {
 
 
 
-const cardSprite1 = game.add
-.sprite(100, 600, "archer1")
-.setScale(TINYCARDSCALE)
-.setInteractive({
-useHandCursor: true,
-});
-const cardSprite2 = game.add
-.sprite(150, 600, "mage2")
-.setScale(TINYCARDSCALE)
-.setInteractive({
-useHandCursor: true,
-});
-const cardSprite3 = game.add
-.sprite(200, 600, "templar3")
-.setScale(TINYCARDSCALE)
-.setInteractive({
-useHandCursor: true,
-});
-// THIS IS READY TO PLAY POSITION ONE
-cardSprite1.on('pointerup', () => {
-  cardSprite1.x = 200
-  cardSprite1.y = 525
-})
+  const cardSprite1 = game.add
+  .sprite(100, 600, "archer1")
+  .setScale(TINYCARDSCALE)
+  .setInteractive({
+  useHandCursor: true,
+  });
+  const cardSprite2 = game.add
+  .sprite(150, 600, "mage2")
+  .setScale(TINYCARDSCALE)
+  .setInteractive({
+  useHandCursor: true,
+  });
+  const cardSprite3 = game.add
+  .sprite(200, 600, "templar3")
+  .setScale(TINYCARDSCALE)
+  .setInteractive({
+  useHandCursor: true,
+  });
+  // THIS IS READY TO PLAY POSITION ONE
+  cardSprite1.on('pointerup', () => {
+    cardSprite1.x = 200
+    cardSprite1.y = 525
+  })
 
-// THIS IS READY TO PLAY POSITION TWO
-cardSprite2.on('pointerup', () => {
-  cardSprite2.x = 300
-  cardSprite2.y = 525
-})
+  // THIS IS READY TO PLAY POSITION TWO
+  cardSprite2.on('pointerup', () => {
+    cardSprite2.x = 300
+    cardSprite2.y = 525
+  })
 
-// THIS IS READY TO PLAY POSITION THREE
-cardSprite3.on('pointerup', () => {
-  cardSprite3.x = 400
-  cardSprite3.y = 525
-})
+  // THIS IS READY TO PLAY POSITION THREE
+  cardSprite3.on('pointerup', () => {
+    cardSprite3.x = 400
+    cardSprite3.y = 525
+  })
 
-// Listen for the 'pointerdown' event on the sprite
-cardSprite1.on("pointerdown", () => {
-console.log("Front End Card clicked!");
-socket.emit('gameTest');
-});
+  // Listen for the 'pointerdown' event on the sprite
+  cardSprite1.on("pointerdown", () => {
+  console.log("Front End Card clicked!");
+  socket.emit('gameTest');
+  });
 
 
 
