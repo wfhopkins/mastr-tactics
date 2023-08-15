@@ -99,7 +99,16 @@ io.on('connection', client => {
         readyPlayers.splice(0, 2); // Remove the players who started the game
       }
     }
+
+    client.on('playACArd', () => {
+      console.log("Card Played", cardSprite)
+    })
+
   });
+
+  client.on('gameTest', () => {
+    console.log("Phaser is talking to Server");
+  })
 
  
 

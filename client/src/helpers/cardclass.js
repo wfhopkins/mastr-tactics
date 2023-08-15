@@ -207,10 +207,10 @@ class Collection {
     } else {
       for (let cardIndex = this.currentCards.length-1; cardIndex >= 0; cardIndex--) {
         if (this.facedown) {
-          cardImage =  game.add.image(cardIndex * (this.stacked ? 2 : 20) + x, y, 'cardBack')
+          cardImage =  game.add.image(cardIndex * (this.stacked ? 2 : 60) + x, y, 'cardBack')
           cardImage.setScale(this.currentScale);
         } else {
-          cardImage = game.add.image(cardIndex * (this.stacked ? 2 : 20) + x, y, this.currentCards[cardIndex].phaserName);
+          cardImage = game.add.image(cardIndex * (this.stacked ? 2 : 60) + x, y, this.currentCards[cardIndex].phaserName);
           cardImage.setScale(this.currentScale);
         }
         this.cardStack.push(cardImage);
