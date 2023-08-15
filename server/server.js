@@ -105,11 +105,19 @@ io.on('connection', client => {
 
         io.to(clients[player1]).emit('gameStart', player2); // Send opponent's name
         io.to(clients[player2]).emit('gameStart', player1); // Send opponent's name
-
         readyPlayers.splice(0, 2); // Remove the players who started the game
       }
     }
+
+    client.on('playACArd', () => {
+      console.log("Card Played", cardSprite)
+    })
+
   });
+
+  client.on('gameTest', () => {
+    console.log("Phaser is talking to Server");
+  })
 
  
 

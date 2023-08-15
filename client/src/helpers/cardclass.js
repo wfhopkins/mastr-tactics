@@ -262,6 +262,34 @@ class Collection {
     return collectionList;
   }
 
+<<<<<<< HEAD
+=======
+  showCards(game, x, y) {
+    //this.unshowCards();
+    let cardImage = undefined;
+    if (this.currentCards === []) {
+      return;
+    } else {
+      for (let cardIndex = this.currentCards.length-1; cardIndex >= 0; cardIndex--) {
+        if (this.facedown) {
+          cardImage =  game.add.image(cardIndex * (this.stacked ? 2 : 60) + x, y, 'cardBack')
+          cardImage.setScale(this.currentScale);
+        } else {
+          cardImage = game.add.image(cardIndex * (this.stacked ? 2 : 60) + x, y, this.currentCards[cardIndex].phaserName);
+          cardImage.setScale(this.currentScale);
+        }
+        this.cardStack.push(cardImage);
+      }
+    }
+  }
+
+  unshowCards() {
+    this.cardStack.forEach((card) => {
+      card.destroy();
+    })
+    this.cardStack = [];
+  } 
+>>>>>>> main
 
 }
 

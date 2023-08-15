@@ -80,6 +80,7 @@ main {
   width: 80%;
   margin: -8rem auto 4em;
   padding: 4em;
+  padding-bottom: 7rem;
   text-align: center;
   z-index: 1;
   font: var(--fontSize)/200% 'Bilbo Swash Caps', cursive; /* Apply font style */
@@ -108,6 +109,22 @@ div p:not(:first-child)::first-letter {
   padding-top: 1rem;
 }
 
+.waiting-message {
+  font-size: 2.25em;
+  color: #2f6b7c;
+  margin-top: 0.75em;
+  text-align: justify;
+  position: relative;
+  z-index: 1;
+}
+
+.waiting-message span {
+  float: left;
+  font: 1.7em/1em Morris;
+  text-shadow: 1px 1px 1px #000;
+  margin: 0 0.5rem;
+}
+
 .cachet {
   width: calc((100vw * 5) / 42);
   height: auto;
@@ -129,6 +146,28 @@ div p:not(:first-child)::first-letter {
 
   width: 60%
 }
+
+.welcome-image {
+  position: absolute;
+  top: 45%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 2rem 0; /* Adjust margin as needed */
+  max-width: 80%; /* Limit the width to fit the screen */
+  max-height: 70vh; /* Adjust the height as needed */
+  z-index: -2;
+}
+
+.welcome-image img {
+  width: auto;
+  height: 100%;
+  max-width: 100%;
+  max-height: 100%;
+}
+
 
 /* Increase size and move image to the left */
 #rulesImage {

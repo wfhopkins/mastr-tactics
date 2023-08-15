@@ -5,7 +5,7 @@ import '../styles/Login.css';
 
 // Define the Login component
 export default function Login(props) {
-  // State to manage email and password inputs
+  // State to manage username and password inputs
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const loginImage = otherImages.loginImage;
@@ -13,7 +13,7 @@ export default function Login(props) {
   // Handle form submission
   const onSubmit = function(event) {
     event.preventDefault();
-    // Call the login function from props if email is provided
+    // Call the login function from props if username is provided
     username && props.login(username, password);
   };
   

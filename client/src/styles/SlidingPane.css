@@ -10,6 +10,8 @@
   box-shadow: 0 8px 8px rgba(0, 0, 0, 0.5);
   transition: transform 0.5s;
   will-change: transform;
+  background: linear-gradient(to right, #2f6b7c, #ad2c2d); /* Customize the gradient colors */
+  color: white; /* Set text color to contrast with the background */
   z-index: 1000; /* Place it above other content */
 }
 .slide-pane:focus {
@@ -67,7 +69,7 @@
   display: flex;
   flex: 0 0 64px;
   align-items: center;
-  background: #ebebeb;
+  background: #1e3944;
   height: 64px;
   border-bottom: 1px solid rgba(0, 0, 0, 0.1);
 }
