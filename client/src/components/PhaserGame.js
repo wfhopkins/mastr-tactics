@@ -15,34 +15,70 @@ const factions = ["archer", "mage", "rogue", "sorcerer", "templar"];
 //   }
 // }
 
-const PhaserGame = () => {
+const PhaserGame = ( 
+  // { socket, currentUser, opponent } 
+) => {
+  // const [gameEven, setMessages] = useState([]);
+  // const [messageInput, setMessageInput] = useState('');
+
+  // const handleSendCard = (testString) => {
+  //   if (testString !== '') {
+  //     //const cardEncoded = JSON.stringify(cardObj)
+  //     const newMessage = {
+  //       text: messageInput,
+  //       from: currentUser,
+  //       to: opponent,
+  //     };
+  //     socket.emit('privateMessage', cardEncoded);
+  //     setMessageInput('');
+  //   }
+  // };
+
+
+
   // Create a reference to the game container element
   const gameContainerRef = useRef(null);
   // all game runtime code inside useEffect..
   useEffect(() => {
-    // global game variables and constants;
-    const deck = new Deck(factions, cardImages);
-    const discardPile = new Collection();
-    let player = undefined; 
+
+  //   socket.on('privateMessage', (message) => {
+  //     setMessages((prevMessages) => [...prevMessages, message]);
+  //   });
+  // }, [socket]);
+
+    //debugging tools...
     let fpsMeter = '';
     let debug = '';
-    // any preloaded assets should be here.
-    function preload() {
-      this.load.image('backdrop', otherImages.backdrop);
 
-      // this.load.image('backdrop', otherImages.backdrop).displayWidth = 600;
-      // this.load.image('backdrop', otherImages.backdrop).displayHeight = 800;
+    //create game objects..
+    let deck = undefined;
+    let discardPile = undefined;
+    let opponentHand = undefined;
+    let player = undefined;
+    
+    
+    function preload() {  
+      // define 'this' alias..
+      const game = this;
 
-      this.load.image('cardBack', otherImages.cardBack)
-      this.load.image('scoreboard', otherImages.scoreboard);
+
+      //register images assets inside phaser...
+      game.load.image('backdrop', otherImages.backdrop);
+      game.load.image('cardBack', otherImages.cardBack)
+      game.load.image('scoreboard', otherImages.scoreboard);
       
-      for (let card of deck.cards) {
-        this.load.image(card.phaserName.toString(), card.image)
-        //console.log(cardphaserName, card.image)
+      for (let card in cardImages) {
+        game.load.image(card, cardImages[card])
+        //console.log(card, cardImages[card])
       };
+      
+      //define game objects...
+      opponentHand  = new Hand      (game, 64, 100, TINYCARDSCALE, [] );
+      discardPile   = new Collection(game, 64, 300, SMALLCARDSCALE, [] );
+      deck          = new Deck      (game, 64, 500, SMALLCARDSCALE, factions, cardImages);
+      player        = new Player    (game, XRES / 2 - 30, YRES - 120, TINYCARDSCALE, deck);
+      
       //if first player then...
-      player = new Player(deck, "opponent_name");
-      player.hand.scale = TINYCARDSCALE;
       // then pass to other player otherwise wait for deck from ws
       // WS(tooppenent, deck);
       // else 
@@ -54,10 +90,13 @@ const PhaserGame = () => {
 
     // main game loop    
     function create() {
+      // define 'this' alias..
       const game = this;
+
       let debugText = '';
       game.add.image(XRES / 2, YRES / 2 , 'backdrop').setDisplaySize(XRES, YRES)
 
+      // cardSprite.setInteractive();
 
       //basic tempalte for eventaul dynamic score counter  (NEW)
       let scoreboardX = 76;
@@ -66,35 +105,43 @@ const PhaserGame = () => {
       const roundTracker = game.add.text(scoreboardX - 36, scoreboardY - 47, 'Round ' + 5);
       const counter = game.add.text(scoreboardX - 39, scoreboardY - 20, 14 + ' VS ' + 22);
 
+      discardPile.hidden = false;
 
-// //basic tempalte for eventaul dynamic score counter  (NEW)
-// const scoreBoard = game.add.image(72, 250, 'scoreboard').setScale(SMALLCARDSCALE);
-// const roundTracker = game.add.text(36, 203, 'Round ' + 5);
-// const counter = game.add.text(33, 230, 14 + ' VS ' + 22);
-
-      //placeholder for deck object
-      //const deckHolder = game.add.sprite(530, 300, 'cardBack').setScale(TINYCARDSCALE);
+      // fill the oppoenents hand with dummy cards, set their scale, and flip them face down
+      for (let count = 0; count < 5; count++) {
+        opponentHand.receiveCard(new Card(game, 0, 0, 'dummy', 1, count, 'cardBack'));
+      }
+      //opponentHand.facedown = true;
+      opponentHand.showCards();
 
       // boundary for discard pile
-        const discardArea = game.add.rectangle(530, YRES / 2 - 150, 95, 135, '0x522c2');
-        game.add.text(495, YRES / 2 - 150, 'DISCARD', {  fill: '#aaaaaa'});
+      const discardArea = game.add.rectangle(530, YRES / 2 - 150, 95, 135, '0x522c2');
+      game.add.text(495, YRES / 2 - 150, 'DISCARD', {  fill: '#aaaaaa'});
         
       
-      // game.input.once('pointerup', () =>
-      // {
+      // game.input.once('pointerup', () => {
       //   player.hand.unshowCards(game);
       // });
+        
+
+      //discardPile.receiveCard(player.hand.giveRandomCard());
+      deck.receiveCard(player.hand.giveRandomCard());
+
+
+
+      //deck.showCards();
+      discardPile.showCards();
+      player.hand.showCards();
+
+
+      ///////////////////////////////////// BEGIN GAME LOOP //////////////////////////////////////
+      ///////////////////////////////////// BEGIN GAME LOOP //////////////////////////////////////
+      ///////////////////////////////////// BEGIN GAME LOOP //////////////////////////////////////
+      ///////////////////////////////////// BEGIN GAME LOOP //////////////////////////////////////
+
+      // console.log("deck", deck.cards.show);
+      // const gameState = new Gamestate(player, deck, discardPile)
       
-      ///////////////////////////////////// BEGIN GAME LOOP //////////////////////////////////////
-      ///////////////////////////////////// BEGIN GAME LOOP //////////////////////////////////////
-      ///////////////////////////////////// BEGIN GAME LOOP //////////////////////////////////////
-      ///////////////////////////////////// BEGIN GAME LOOP //////////////////////////////////////
-
-      console.log("deck", deck.cards.show);
-      const gameState = new Gamestate(player, deck, discardPile)
-
-
-
       // loop: keep going until we get to 25
       
       // ready to play our turn
@@ -102,24 +149,20 @@ const PhaserGame = () => {
       // show our hand
       
       
-      const opponentHand = new Collection();
-      for (let count = 0; count < 5; count++) {
-        opponentHand.receiveCard(new Card('dummy', 1, count, 'cardBack'));
-      }
-      opponentHand.scale = TINYCARDSCALE;
-      opponentHand.facedown = true;
+     
+
+      // opponentHand.showCards(game, XRES / 2 - 30, YRES - 660);
       
-      gameState.player.hand.showCards(game, XRES / 2 - 30, YRES - 120)
-      opponentHand.showCards(game, XRES / 2 - 30, YRES - 660);
-      
+      //cardSprite.on('pointerup', cardSprite.unshowCards , game);
+
       //show opponents "hand" (actually just five cardbacks of our own hand);
       
       // show the discard pile
       // show deck
-      deck.facedown = true;
-      deck.stacked = true;
-      deck.scale = SMALLCARDSCALE;
-      deck.showCards(game, 510, YRES / 2 + 150);
+      // deck.facedown = true;
+      // deck.stacked = true;
+      // deck.scale = SMALLCARDSCALE;
+      // deck.showCards(game, 510, YRES / 2 + 150);
 
       // show scoreboard (player: round, points, the names)
       // endloop if done
@@ -134,7 +177,10 @@ const PhaserGame = () => {
     };
     
     function update() { 
-      const loopStatus = this.sys.game.loop;
+      // define 'this' alias..
+      const game = this;
+
+      const loopStatus = game.sys.game.loop;
       fpsMeter.setText("FPS :" + loopStatus.actualFps);  
       //debug.setText(debugBuffer);
 

@@ -78,6 +78,15 @@ io.on('connection', client => {
     }
   });
 
+  // client.on('gameCommand', (message) => {
+  //   const { text, from, to } = message;
+  //   const recipientId = clients[to];
+
+  //   if (recipientId) {
+  //     io.to(recipientId).emit('privateMessage', { text, from });
+  //   }
+  // });
+
   client.on('readyToPlay', () => {
 
     console.log('Ready to play event received');

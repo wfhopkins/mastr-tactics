@@ -1,4 +1,4 @@
-const SMALLCARDSCALE = 0.25;
+const SMALLCARDSCALE = 0.24;
 const TINYCARDSCALE = 0.16;
 const XRES = 600;
 const YRES = 800;
@@ -24,7 +24,6 @@ class Gamestate {
   constructor(player, deck, discard) {
     this.player = player;
     this.battlefield = new Battlefield();
-    this.player = player;
     this.deck = deck;
     this.discard = discard;
   }
@@ -85,10 +84,9 @@ class Gamestate {
 // A player has a name, score and new hand drawn from
 // a passed-in deck
 class Player {
-  constructor(deck, opponentName){
-    this.hand = new Hand(deck);
+  constructor(game, x, y, scale, deck){
+    this.hand = new Hand(game, x, y, scale, deck);
     this.currentPoints = 0;
-    this.opponentName = opponentName;
   };
 
   set myTurn(newState) {this.turn = newState};
@@ -114,12 +112,17 @@ class Player {
 
 // A card object contains the passed-in attributes of a specific card
 class Card {
-  constructor(factionValue, rankValue, idValue, cardImageValue) {
+  constructor(game, x, y, scale, factionValue, rankValue, idValue, cardImageValue) {
     this.currentFaction = factionValue;
     this.currentRank = rankValue;
     this.currentId = idValue;
     this.currentCardImage = cardImageValue;
     this.currentPhaserName = factionValue.toString() + rankValue.toString();
+    this.currentX = x;
+    this.currentY = y;
+    this.currentScale = scale;
+    this.currentGame = game;
+    this.currentHidden = false;
   }
 
   // getter/setter pairs for object properties.
@@ -128,12 +131,31 @@ class Card {
   get id() { return this.currentId; }
   get image() { return this.currentCardImage; }
   get phaserName() { return this.currentPhaserName; }
-  
+  get sprite() { return this.currentSprite; }
+  get scale() { return this.currentScale; }
+  get hidden() { return this.currentHidden; }
+
   set rank(newRank) { this.rank = newRank; }
   set faction(newFaction) { this.faction = newFaction; }
   set id(newId) { this.currentId = newId; }
   set image(newCardImage) { this.currentCardImage = newCardImage; }
   set phaserName(newphaserName) { this.currentPhaserName = newphaserName; }
+  set sprite(newSprite) { this.currentSprite = newSprite; }
+  set scale(newScale) { this.currentScale = newScale; }
+  set X(x) {this.currentX = x; if (this.currentSprite) { this.currentSprite.setX(x)}}
+  set Y(y) {this.currentY = y; if (this.currentSprite) { this.currentSprite.setY(y)}}
+  set hidden(newState) { this.currentHidden = newState; }
+
+  unshow() {
+    console.log()
+    if (this.currentSprite) { this.currentSprite.destroy(); };
+  }
+
+  show() {
+    this.currentHidden ?
+      this.currentGame.add.sprite(this.currentX, this.currentY, 'cardBack').setScale(this.currentScale) :
+      this.currentGame.add.sprite(this.currentX, this.currentY, this.phaserName).setScale(this.currentScale);
+  }
 
   //provide a quick description of a card, in long or short form
   description(short) {
@@ -147,26 +169,65 @@ class Card {
 
 // This is the parent class for all objects that are a collection of card objects
 class Collection {
-  constructor(deck) {
-    if (deck) {
-      this.currentCards = deck;
+  constructor(game, x, y, scale, cardStack) {
+    if (cardStack) {
+      this.currentCards = cardStack;
     } else this.currentCards = [];
-    this.facedownState = false;
-    this.cardStack = [];
-    this.stacked = false; //render as a stack?
-    this.currentScale = SMALLCARDSCALE;
+    // this.cardStack = [];
+    this.stacked = true; //render as a stack by default
+    this.basePositionX = x;
+    this.basePositionY = y;
+    this.currentScale = scale;
+    this.currentGame = game;
+    this.hidden = true;
   }
   get cards() { return this.currentCards };
-  get facedown() { return this.facedownState };
   get scale() { return this.currentScale };
 
   set cards(newCards) {this.currentCards = newCards};
-  set facedown(newState) {this.facedownState = newState};
-  set scale(newState) {this.currentScale = newState};
+  set scale(newScale) {
+    this.unshowCards();
+    for (let cardIndex = this.currentCards.length-1; cardIndex >= 0; cardIndex--) {
+      this.currentCards[cardIndex].scale = newScale;
+    }
+  };
+
+  showCards() {
+    this.unshowCards();
+    this.organizeCards();
+   
+    if (this.currentCards === []) {
+      return;
+    } else {
+      for (let cardIndex = this.currentCards.length-1; cardIndex >= 0; cardIndex--) {
+        console.log("Showing at:", this.currentCards[cardIndex].currentX, this.currentCards[cardIndex].currentY)
+        this.currentCards[cardIndex].show();
+      }
+    }
+  }
+
+  unshowCards() {
+    // console.log("unshowing:", this.currentCards);
+    for (let card of this.currentCards) {
+      card.unshow();
+    }
+
+  } 
+
+  organizeCards() {
+    this.unshowCards();
+    for (let cardIndex = this.currentCards.length-1; cardIndex >= 0; cardIndex--) {
+      this.currentCards[cardIndex].X = cardIndex * (this.stacked ? 0 : 119) + this.basePositionX;
+      this.currentCards[cardIndex].Y = this.basePositionY;
+      this.currentCards[cardIndex].scale = this.currentScale;
+      this.currentCards[cardIndex].hidden = this.hidden;
+    }
+  }
 
   // Choose a random index within the boundaries of the collection
   // and remove it from the array, then return that card
   giveRandomCard() {
+    this.unshowCards();
     const randomIndex = Math.floor(Math.random()*this.currentCards.length);
     const card = this.currentCards.splice(randomIndex, 1);
     return card[0];
@@ -175,10 +236,11 @@ class Collection {
   // Find a specific card in this collection, and remove it from
   // this collection, and return that cars
   giveCard(card) {
+    this.unshowCards();
     const index = this.currentCards.findIndex(card);
     if (index > -1) {
       const newCard = this.currentCards.splice(index, 1);
-      console.log("Found card!");
+      // console.log("Found card!");
       return newCard[0];
     } else {
       return undefined;
@@ -187,58 +249,43 @@ class Collection {
 
   // Add a passed card object to this collection
   receiveCard(card) {
+    this.unshowCards();
     this.currentCards.push(card);
   }
 
   // Return a list of every card in this collection
   getCollection(verbosity) {
     let collectionList = ``;
-    for (let item of this.cards) {
+    for (let item of this.currentCards) {
       collectionList += `${item.description(verbosity)}`;
     }
     return collectionList;
   }
 
-  showCards(game, x, y) {
-    //this.unshowCards();
-    let cardImage = undefined;
-    if (this.currentCards === []) {
-      return;
-    } else {
-      for (let cardIndex = this.currentCards.length-1; cardIndex >= 0; cardIndex--) {
-        if (this.facedown) {
-          cardImage =  game.add.image(cardIndex * (this.stacked ? 2 : 20) + x, y, 'cardBack')
-          cardImage.setScale(this.currentScale);
-        } else {
-          cardImage = game.add.image(cardIndex * (this.stacked ? 2 : 20) + x, y, this.currentCards[cardIndex].phaserName);
-          cardImage.setScale(this.currentScale);
-        }
-        this.cardStack.push(cardImage);
-      }
-    }
-  }
-
-  unshowCards() {
-    this.cardStack.forEach((card) => {
-      card.destroy();
-    })
-    this.cardStack = [];
-  } 
 
 }
 
 // A deck is a type of collection, but constructs a new set of cards 
 // of a passed-in array of faction types
 class Deck extends Collection {
-  constructor(factions, imageObj) {
-    super();
-    this.stack = true;
+  constructor(game, x, y, scale, factions, sourceImagesObj) {
+    super(game, x, y, scale, []);
+    this.stacked = true;
     const newDeck = [];
     for (let factionIndex = 0; factionIndex < factions.length; factionIndex++) {
       for (let rankIndex = 0; rankIndex < 5; rankIndex++) {
         const id = factionIndex * 5 + rankIndex;
         const image = factions[factionIndex] + (rankIndex + 1)
-        const newCard = new Card(factions[factionIndex], rankIndex + 1, id, imageObj[image]);
+        //console.log("current scale for card:", this.currentScale);
+        const newCard = new Card(
+          this.currentGame,  //game obj
+          rankIndex * (this.stacked ? 0 : 119) + this.basePositionX, //x
+          this.basePositionY, //y
+          this.currentScale, //scale (from collection)
+          factions[factionIndex], //faction name
+          rankIndex + 1,  // rank
+          id, //id
+          sourceImagesObj[image]); //image source
         newDeck.push(newCard);
       }
     }
@@ -249,15 +296,18 @@ class Deck extends Collection {
 // A hand is a type of collection that lives inside a player object
 // and takes 5 random cards from a deck when instantiated.
 class Hand extends Collection {
-  constructor(deck) {
-    // inherited contructor makes empty hand
-    super(); 
-    // draw 5 random card from the deck
-    this.receiveCard(deck.giveRandomCard());
-    this.receiveCard(deck.giveRandomCard());
-    this.receiveCard(deck.giveRandomCard());
-    this.receiveCard(deck.giveRandomCard());
-    this.receiveCard(deck.giveRandomCard());  
+  constructor(game, x, y, scale, deck) {
+    // inherited constructor makes empty collection for the hand
+    super(game, x, y, scale, []); 
+    this.stacked = false; //render as a stack?
+    this.hidden = false;
+    // draw 5 random card from the deck if there are any to draw..
+
+    for (let index = 0; index < 5; index++) {
+      if (deck.length > 0) this.receiveCard(deck.giveRandomCard());
+      console.log("Num of cards in hand: ",this.currentCards.length)
+      console.log("Num of cards in deck: ",deck.length)
+    }
   }
 }
 
