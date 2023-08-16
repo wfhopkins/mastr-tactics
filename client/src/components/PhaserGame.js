@@ -27,7 +27,7 @@ const factions = ["archer", "mage", "rogue", "sorcerer", "templar"];
 //   }
 // }
 
-const PhaserGame = ( {socket} ) => {
+const PhaserGame = ({ socket }) => {
   // Create a reference to the game container element
   const gameContainerRef = useRef(null);
   // all game runtime code inside useEffect..
@@ -85,13 +85,15 @@ const PhaserGame = ( {socket} ) => {
       const roundTracker = game.add.text(
         scoreboardX - 36,
         scoreboardY - 47,
-        "Round " + 5
+        "Round " + 1
       );
-      const counter = game.add.text(
-        scoreboardX - 39,
+      let counter = game.add.text(
+        scoreboardX - 32,
         scoreboardY - 20,
-        14 + " VS " + 22
+        0 + " VS " + 0
       );
+
+      
 
       // //basic tempalte for eventaul dynamic score counter  (NEW)
       // const scoreBoard = game.add.image(72, 250, 'scoreboard').setScale(SMALLCARDSCALE);
@@ -105,11 +107,11 @@ const PhaserGame = ( {socket} ) => {
       const discardArea = game.add.rectangle(
         530,
         YRES / 2 - 150,
-        95,
-        135,
-        "0x522c2"
+        80,
+        115,
+        "0x304B5B"
       );
-      game.add.text(495, YRES / 2 - 150, "DISCARD", { fill: "#aaaaaa" });
+      game.add.text(498, YRES / 2 - 160, "DISCARD", { fill: "#aaaaaa" });
 
       // game.input.once('pointerup', () =>
       // {
@@ -137,13 +139,12 @@ const PhaserGame = ( {socket} ) => {
       opponentHand.facedown = true;
 
 
-      // how the players hand
-      gameState.player.hand.showCards(game, XRES / 2 - 120, YRES - 100);
-      opponentHand.showCards(game, XRES / 2 - 120, YRES - 700);
+      // // Show the players hand
+      // gameState.player.hand.showCards(game, XRES / 2 - 120, YRES - 100);
 
       //show opponents "hand" (actually just five cardbacks of our own hand);
 
-  
+
       // show deck
       deck.facedown = true;
       deck.stacked = true;
@@ -153,101 +154,316 @@ const PhaserGame = ( {socket} ) => {
       ////////////////////////THIS IS WHERE WE ARE TESTING////////////////////////////////
 
 
+
+
+
+
+      // if (cardsInPlay === 3) {
+      //   readyButton.on('pointerup', () => {
+      //     game.myEmitter.emit('battle start')
+      //   }) 
+      // }
+      // show scoreboard (player: round, points, the names)
+      // endloop if done
+
+      //POSITION ONE x:
+      //POSTION 
+
+
+      /////////////////////////////////////SCENE ONE/////////////////////////////////
+      //   opponentHand.showCards(game, XRES / 2 - 120, YRES - 700);
+      // let gameOverText = this.add.text(300, 400, 'READY FOR BATTLE', { fontSize: '32px', fill: '#fff' });
+      // gameOverText.visible = false;
+      // gameOverText.setOrigin(0.5)
+
+      let battle = this.add.text(300, 400, 'BATTLE!', { fontSize: '32px', fill: '#fff' });
+      battle.visible = false;
+      battle.setOrigin(0.5)
+
+      let teamBattle = this.add.text(300, 400, 'TEAM BATTLE', { fontSize: '32px', fill: '#fff' });
+      teamBattle.visible = false;
+      teamBattle.setOrigin(0.5)
+
+
+      let battleText1 = this.add.text(XRES / 2 - 100, YRES - 600, '+1', { fontSize: '32px', fill: '#fff' });
+      battleText1.visible = false;
+      battleText1.setOrigin(0.5);
+
+      let battleText2 = this.add.text(XRES / 2, YRES - 350, '+1', { fontSize: '32px', fill: '#fff' });
+      battleText2.visible = false;
+      battleText2.setOrigin(0.5);
+
+      let battleText3 = this.add.text(XRES / 2 + 100, YRES - 600, '+1', { fontSize: '32px', fill: '#fff' });
+      battleText3.visible = false;
+      battleText3.setOrigin(0.5);
+
+      let teamPoint = this.add.text(XRES / 2, YRES - 600, '+2', { fontSize: '32px', fill: '#fff' });
+      teamPoint.visible = false;
+      teamPoint.setOrigin(0.5);
+
       // ready button after cards are played for turn
       const readyButton = this.add.text(500, 720, 'READY')
       readyButton.setInteractive({
         useHandCursor: true,
       });
 
+      // readyButton.on('pointerup', () => {
+      //   gameOverText.visible = true
+      // })
+
+      readyButton.on('pointerup', () => {
+        battle.visible = true
+        setTimeout(() => {
+          cardSprite7.setTexture('archer4'); // flip Opponent Card 1
+        }, 500) // flip opp card 1
+
+        setTimeout(() => {
+          battle.visible = false
+        }, 750) // flip opp card 1
+
+        setTimeout(() => {
+          counter.text = 1 + " VS " + 0
+          battleText1.visible = true
+        }, 1000) // score first battle
+
+        setTimeout(() => {
+          cardSprite8.setTexture('rogue1')
+        }, 2000) // flip card two
+
+        setTimeout(() => {
+          counter.text = 1 + " VS " + 1
+          battleText2.visible = true
+        }, 3000) // score second battle
+
+        setTimeout(() => {
+          cardSprite9.setTexture('sorcerer1')
+        }, 4000) // flip card 3
+
+        setTimeout(() => {
+          counter.text = 2 + " VS " + 1
+          battleText3.visible = true
+        }, 5000) // score third battle
+
+        setTimeout(() => {
+          battleText1.visible = false;
+          battleText2.visible = false;
+          battleText3.visible = false;
+        }, 6000) // remove points
+
+        setTimeout(() => {
+          teamBattle.visible = true;
+        }, 6500) // announce team battle
+
+       
+
+        setTimeout(() => {
+          counter.text = 4 + " VS " + 1
+          teamPoint.visible = true;
+        }, 7500) // score team battle
+
+        setTimeout(() => {
+          cardSprite1.x = 531
+          cardSprite1.y = 250
+          cardSprite2.x = 531
+          cardSprite2.y = 250
+          cardSprite3.x = 531
+          cardSprite3.y = 250
+          
+        }, 9000) // Discard opponent hand
+        
+        setTimeout(() => {
+          teamPoint.visible = false;
+          teamBattle.visible = false;
+        }, 9500) // remove text
+        
+        
+        setTimeout(() => {
+          cardSprite7.x = 531
+          cardSprite7.y = 250
+          cardSprite8.x = 531
+          cardSprite8.y = 250
+          cardSprite9.x = 531
+          cardSprite9.y = 250
+          
+        }, 10000) // Discard opponent hand
+
+        setTimeout(() => {
+          cardSprite10.setTexture('mage4')
+          cardSprite10.x=XRES / 2 - 120
+          cardSprite10.y=YRES - 100
+          cardSprite11.x=XRES/2
+          cardSprite11.y=YRES - 700
+
+        }, 10500) // remove text
+
+        setTimeout(() => {
+          cardSprite12.setTexture('templar3')
+          cardSprite12.x=XRES / 2 - 60
+          cardSprite12.y=YRES - 100
+          cardSprite13.x=XRES/2 + 60
+          cardSprite13.y=YRES - 700
+
+        }, 11000) // remove text
+
+        setTimeout(() => {
+          cardSprite17.setTexture('templar4')
+          cardSprite17.x=XRES / 2
+          cardSprite17.y=YRES - 100
+          cardSprite18.x=XRES/2 + 120
+          cardSprite18.y=YRES - 700
+          roundTracker.text = "Round " + 2
+        }, 11500) // remove text
+      });
+
+      //   setTimeout(() => {
+      //     cardSprite9.setTexture('templar5');
+
+
+      const cardSprite1 = game.add
+        .sprite(XRES / 2 - 120, YRES - 100, "archer1")
+        .setScale(TINYCARDSCALE)
+        .setInteractive({
+          useHandCursor: true,
+        });
+      const cardSprite2 = game.add
+        .sprite(XRES / 2 - 60, YRES - 100, "mage2")
+        .setScale(TINYCARDSCALE)
+        .setInteractive({
+          useHandCursor: true,
+        });
+      const cardSprite3 = game.add
+        .sprite(XRES / 2, YRES - 100, "templar3")
+        .setScale(TINYCARDSCALE)
+        .setInteractive({
+          useHandCursor: true,
+        });
+      const cardSprite14 = game.add
+        .sprite(XRES / 2 + 60, YRES - 100, "rogue5")
+        .setScale(TINYCARDSCALE)
+        .setInteractive({
+          useHandCursor: true,
+        });
+
+      const cardSprite15 = game.add
+        .sprite(XRES / 2 + 120, YRES - 100, "sorcerer1")
+        .setScale(TINYCARDSCALE)
+        .setInteractive({
+          useHandCursor: true,
+        });
+      // THIS IS READY TO PLAY POSITION ONE 200, 525
+      cardSprite1.on('pointerup', () => {
+        cardSprite1.x = 200
+        cardSprite1.y = 525
+      })
+
+      // THIS IS READY TO PLAY POSITION TWO
+      cardSprite2.on('pointerup', () => {
+        cardSprite2.x = 300
+        cardSprite2.y = 525
+      })
+
+      // THIS IS READY TO PLAY POSITION THREE
+      cardSprite3.on('pointerup', () => {
+        cardSprite3.x = 400
+        cardSprite3.y = 525
+      })
+      /////////////////////////////////////SCENE ONE/////////////////////////////////
+
+      //opponentHand.showCards(game, XRES / 2 - 120, YRES - 700);
+      const cardSprite4 = game.add
+        .sprite(XRES / 2 - 60, YRES - 700, "cardBack")
+        .setScale(TINYCARDSCALE)
+        .setInteractive({
+          useHandCursor: true,
+        });
+      const cardSprite5 = game.add
+        .sprite(XRES / 2 - 120, YRES - 700, "cardBack")
+        .setScale(TINYCARDSCALE)
+        .setInteractive({
+          useHandCursor: true,
+        });
+
+      const cardSprite7 = game.add
+        .sprite(XRES / 2 - 100, YRES - 500, "cardBack")
+        .setScale(TINYCARDSCALE)
+        .setInteractive({
+          useHandCursor: true,
+        });
+
+      const cardSprite8 = game.add
+        .sprite(XRES / 2, YRES - 500, "cardBack")
+        .setScale(TINYCARDSCALE)
+        .setInteractive({
+          useHandCursor: true,
+        });
+
+      const cardSprite9 = game.add
+        .sprite(XRES / 2 + 100, YRES - 500, "cardBack")
+        .setScale(TINYCARDSCALE)
+        .setInteractive({
+          useHandCursor: true,
+        });
+
+        const cardSprite10 = game.add                    ///////////////FROM THE DECK
+        .sprite(510, YRES/2 + 150, "cardBack")
+        .setScale(TINYCARDSCALE)
+        .setInteractive({
+          useHandCursor: true,
+        });
+
+        const cardSprite11 = game.add
+        .sprite(510, YRES/2 + 150, "cardBack") ///////////////FROM THE DECK
+        .setScale(TINYCARDSCALE)
+        .setInteractive({
+          useHandCursor: true,
+        });
+
+        const cardSprite12 = game.add
+        .sprite(510, YRES + 150, "cardBack") ///////////////FROM THE DECK
+        .setScale(TINYCARDSCALE)
+        .setInteractive({
+          useHandCursor: true,
+        });
+
+        const cardSprite13 = game.add
+        .sprite(510, YRES + 150, "cardBack") ///////////////FROM THE DECK
+        .setScale(TINYCARDSCALE)
+        .setInteractive({
+          useHandCursor: true,
+        });
+
+        const cardSprite17 = game.add
+        .sprite(510, YRES + 150, "cardBack") ///////////////FROM THE DECK
+        .setScale(TINYCARDSCALE)
+        .setInteractive({
+          useHandCursor: true,
+        });
+
+        const cardSprite18 = game.add
+        .sprite(510, YRES + 150, "cardBack") ///////////////FROM THE DECK
+        .setScale(TINYCARDSCALE)
+        .setInteractive({
+          useHandCursor: true,
+        });
 
 
 
-      if (cardsInPlay === 3) {
-        readyButton.on('pointerup', () => {
-          game.myEmitter.emit('battle start')
-        }) 
-      }
-      // show scoreboard (player: round, points, the names)
-      // endloop if done
-      
-      //POSITION ONE x:
-      //POSTION 
 
-    
-/////////////////////////////////////THIS IS WHERE WE ARE TESTING/////////////////////////////////
-
-
-
-const cardSprite1 = game.add
-.sprite(100, 600, "archer1")
-.setScale(TINYCARDSCALE)
-.setInteractive({
-useHandCursor: true,
-});
-const cardSprite2 = game.add
-.sprite(150, 600, "mage2")
-.setScale(TINYCARDSCALE)
-.setInteractive({
-useHandCursor: true,
-});
-const cardSprite3 = game.add
-.sprite(200, 600, "templar3")
-.setScale(TINYCARDSCALE)
-.setInteractive({
-useHandCursor: true,
-});
-// THIS IS READY TO PLAY POSITION ONE
-cardSprite1.on('pointerup', () => {
-  cardSprite1.x = 200
-  cardSprite1.y = 525
-})
-
-// THIS IS READY TO PLAY POSITION TWO
-cardSprite2.on('pointerup', () => {
-  cardSprite2.x = 300
-  cardSprite2.y = 525
-})
-
-// THIS IS READY TO PLAY POSITION THREE
-cardSprite3.on('pointerup', () => {
-  cardSprite3.x = 400
-  cardSprite3.y = 525
-})
-
-// Listen for the 'pointerdown' event on the sprite
-cardSprite1.on("pointerdown", () => {
-console.log("Front End Card clicked!");
-socket.emit('gameTest');
-});
-
-
-
-  // function handleHandClick(card, cardsInPlay) {
-  //   if (cardsInPlay === 0){
-  //     cardSprite1.on('pointerup', () => {
-  //       cardSprite1.x += 100
-  //       cardSprite1.y -= 100
-  //     })
-  //   }
-  // 
-  // if (cardsInPlay.includes(cardSprite1)) {
-  //   cardSprite1.on('pointerup', () => {
-  //     cardsInHand.push(cardSprite1)
-  //     cardSprite1.setScale(TINYCARDSCALE)
-  //   })
-  // 
-  // if (cardsInHand.includes(cardSprite1)) {
-  //   cardSprite1.on("pointerup", () => {
-  //     cardsInPlay.push(cardSprite1)
-  //     cardSprite1.setScale(SMALLCARDSCALE);
-  //   })
-  // };
+      // // Listen for the 'pointerdown' event on the sprite
+      // cardSprite1.on("pointerdown", () => {
+      // console.log("Front End Card clicked!");
+      // socket.emit('gameTest');
+      // });
 
 
 
 
 
-      
+
+
+
+
+
       ///////////////////////////////////// END GAME LOOP ////////////////////////////////////////
       ///////////////////////////////////// END GAME LOOP ////////////////////////////////////////
       ///////////////////////////////////// END GAME LOOP ////////////////////////////////////////
