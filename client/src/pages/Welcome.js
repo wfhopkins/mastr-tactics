@@ -33,7 +33,7 @@ const Welcome = ({ auth, logout, socket }) => {
   // UseEffect to handle waiting for opponent and game start events
   useEffect(() => {
     socket.on('waitingForOpponent', () => {
-      console.log("Front end receiving waiting for opponent")
+      console.log("Waiting for opponent..")
       setIsWaitingForOpponent(true);
     });
 
@@ -41,7 +41,7 @@ const Welcome = ({ auth, logout, socket }) => {
       setIsWaitingForOpponent(false);
       setOpponentName(opponent); // Store opponent's name
       setGameStarted(true); // Indicate that the game has started
-      console.log('received the gamestart message ', gameStarted)
+      //console.log('received the gamestart message ', gameStarted)
 
     });
 
@@ -53,7 +53,7 @@ const Welcome = ({ auth, logout, socket }) => {
   }, [socket]);
 
   useEffect(() => {
-    console.log('received the gamestart message', gameStarted);
+    //console.log('received the gamestart message', gameStarted);
   }, [gameStarted]);
 
   const handleReadyToPlay = () => {
@@ -169,7 +169,7 @@ const Welcome = ({ auth, logout, socket }) => {
           )}
           {isWaitingForOpponent === false && (
             <div>
-              <PhaserGame socket={socket} />
+              <PhaserGame socket={socket} currentUser={auth.name} opponent={opponentName}/>
               <Chat socket={socket} currentUser={auth.name} opponent={opponentName} />
             </div>
           )}

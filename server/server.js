@@ -69,7 +69,7 @@ io.on('connection', client => {
   console.log('these are the websocket client: ' ,clients);
 
   // Handle incoming messages
-  client.on('privateMessage', (message) => {
+  client.on('privateMessage', (message) => { 
     const { text, from, to } = message;
     const recipientId = clients[to];
 
@@ -78,30 +78,28 @@ io.on('connection', client => {
     }
   });
 
-  // client.on('gameCommand', (message) => {
-  //   const { text, from, to } = message;
-  //   const recipientId = clients[to];
 
-  //   if (recipientId) {
-  //     io.to(recipientId).emit('privateMessage', { text, from });
-  //   }
-  // });
+  client.on('GAME_MESSAGE', (recipient, move) => {
+    io.to(clients[recipient]).emit('GAME_MESSAGE', move);
+    console.log("Recieved message: ", move, " (to", recipient, ")"); 
+    console.log("Relaying game message to", recipient, clients[recipient]);
+  }); 
+ 
 
   client.on('readyToPlay', () => {
 
-    console.log('Ready to play event received');
+    console.log('Ready to play event received from ' );
     if (!readyPlayers.includes(name)) {
       readyPlayers.push(name);
-      
       if (readyPlayers.length === 1) {
         io.to(clients[name]).emit('waitingForOpponent');
-        console.log(readyPlayers);
-        console.log("just sent waitingForOpponent to front end" , name);
+        //console.log(readyPlayers);
+        //console.log("just sent waitingForOpponent to front end" , name);
       } else if (readyPlayers.length === 2) {
         const player1 = readyPlayers[0];
         const player2 = readyPlayers[1];
 
-        console.log('game begginning between ',player1 + ' and ' , player2);
+        console.log('Matched ',player1 + ' and ' , player2);
 
         io.to(clients[player1]).emit('gameStart', player2); // Send opponent's name
         io.to(clients[player2]).emit('gameStart', player1); // Send opponent's name
@@ -120,6 +118,7 @@ io.on('connection', client => {
   })
 
  
+
 
   // Handle client disconnection
   client.on("disconnect", () => {
