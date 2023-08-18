@@ -24,6 +24,10 @@ const PhaserGame = ( {socket} ) => {
   // all game runtime code inside useEffect..
   useEffect(() => {
 
+
+    socket.on('READY BUTTON', () => {
+      console.log("Ready button has been pressed")
+    })
   //   socket.on('privateMessage', (message) => {
   //     setMessages((prevMessages) => [...prevMessages, message]);
   //   });
@@ -169,7 +173,9 @@ const PhaserGame = ( {socket} ) => {
         useHandCursor: true,
       });
 
-
+      readyButton.on('pointerup', () => {
+        socket.emit('READY BUTTON')
+      })
 
 
       if (cardsInPlay === 3) {
