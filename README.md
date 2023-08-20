@@ -26,7 +26,8 @@ The character *deck* is randomized and a *hand* of 5 cards are dealt to both pla
 
 Each player chooses a **3-card battle-party** from their *hand* of five-random cards drawn from a common character *deck*, and places them face down, in opposition to the party selected by your opponent.
 
-#### <<<<<VISUAL AID #1>>>>>
+
+![](client/src/images/archer1.png)
 
 Both players reveal their choices and the BATLLE BEGINS!  A battle is a set of three face-to-face skirmishes.
 
